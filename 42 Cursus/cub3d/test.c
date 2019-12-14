@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 12:27:56 by mbani             #+#    #+#             */
-/*   Updated: 2019/12/04 10:40:51 by mbani            ###   ########.fr       */
+/*   Updated: 2019/12/13 21:47:29 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,28 @@ typedef struct cor
     void *ptr;
     void *win;
     int x;
+    int x_step;
+    int y_step;
     int y;
-    int x1;
-    int y1;
-    
+    float x1;
+    float y1;
+    float theta;
+     
 }cor;
+    char map[15][15]= 
+    {
+        {'1','1','1','1','1','1','1','1'},
+        {'1','0','1','0','0','1','0','1'},
+        {'1','0','1','1','0','0','0','1'},
+        {'1','0','0','0','2','0','1','1'},
+        {'1','0','1','0','0','0','0','1'},
+        {'1','0','1','1','0','1','0','1'},
+        {'1','0','0','0','0','1','0','1'},
+        {'1','0','1','0','0','1','0','1'},
+        {'1','1','1','1','1','1','1','1'}
+    };
 
+// float theta  = 300 ;
 static	void	ft_print(char c, int fd)
 {
 	write(1, &c, 1);
@@ -66,6 +82,7 @@ void line(int x, int y, void *mlx_ptr, void * mlx_win)
         {
             mlx_pixel_put (mlx_ptr, mlx_win, x, y, 14090240);
             x++;
+            y++;
          }
         //  x = 0;
     //      y++;
@@ -98,84 +115,70 @@ void rect(int x, int y,void* mlx_ptr, void *mlx_win)
 }
 void player(int x, int y,void* mlx_ptr, void *mlx_win)
 {
-    int lenX;
-    int lenY;
-
-    lenX = x + 10;
-    lenY = y + 10;
-    while (y <= lenY)
-    {
-        while (x < lenX)
-        {
-            while(y != lenY)
-            {
-                mlx_pixel_put (mlx_ptr, mlx_win, x, y, 14090240);
-                y++;
-            }
-            y -=10;
-            // mlx_pixel_put (mlx_ptr, mlx_win, x, y + 100, 255);
-            x++;
-        }
-        // mlx_pixel_put (mlx_ptr, mlx_win, x - 100 , y, 255);
-        // mlx_pixel_put (mlx_ptr, mlx_win, x, y, 255);
-        y++;
-    }
+    int r = 5;
+    int tempx = x;
+    int tempy = y;
+float ang=0.0;
+while (r)
+{
+	while (ang <= 360)
+	{
+		x = cos(ang * M_PI/180) * r + tempx;
+		y = sin(ang * M_PI/180) * r + tempy;
+		mlx_pixel_put (mlx_ptr, mlx_win, x, y, 14090240);
+		ang += 0.1;
+	}
+	ang = 0;
+	r--;
 }
-int ft_check(int key, cor *mlx)
+}
+void rays(int x, int y,void* mlx_ptr, void *mlx_win, float ang)
 {
-    if(key == 126)
-    {
-     write(1, "Yeah", 4);
-     mlx_pixel_put ((mlx)->ptr, (mlx)->win, (mlx)->x1, (mlx)->y1, 000000);
-     mlx->y1 -= 1;
-     mlx_pixel_put ((mlx)->ptr, (mlx)->win, (mlx)->x1, (mlx)->y1, 14090240);
-    //  mlx->x1 += 10;
-    //  mlx->y1 += 10;
-    // mlx_pixel_put ((mlx)->ptr, (mlx)->win, (mlx)->x1, (mlx)->y1, 14090240);
-    //  *p +=100;
-    //  ft_putnbr(*p, 1);
-    }
-    else
-    write(1, "No", 2);
-    return 0;
-} 
-int main()
+    int r = 200;
+    int tempx = x;
+    int tempy = y;
+    float save = ang;
+// float ang=0.0;
+while (r)
 {
-    cor *mlx;
-    mlx = malloc(sizeof(cor));
-    // void *mlx_ptr;
-    // void *mlx_win;
+	while (ang <= save  + 60)
+	{
+		x = cos(ang * M_PI/180) * r + tempx;
+		y = sin(ang * M_PI/180) * r + tempy;
+		mlx_pixel_put (mlx_ptr, mlx_win, x, y, 65535);
+		ang += 0.1;
+	}
+	ang = save;
+	r--;
+}
+}
+int wall_inter(float x, float y)
+{
+    int x_pos;
+    int y_pos;
+
+    x_pos = (int)x / 100;
+    y_pos = (int)y / 100;
+    printf("x [%d]\n", x_pos);
+    printf("y [%d]\n", y_pos);
+    printf("maap [%c]\n", map[y_pos][x_pos]);
+    return map[y_pos][x_pos];
+}
+
+void map_render(cor *mlx)
+{
+    int i;
+    i = 0;
+
     int height = 0;
     int weight = 0;
+    
     mlx->x=0;
     mlx->y=0;
-     mlx->x1=500;
-     mlx->y1=400;
-    // char map[height][weight];
-
-   char map[15][15]= 
-    {
-        {'1','1','1','1','1','1','1','1'},
-        {'1','1','0','0','0','1','0','1'},
-        {'1','0','1','0','0','0','0','1'},
-        {'1','0','0','0','2','0','1','1'},
-        {'1','1','1','0','0','0','0','1'},
-        {'1','0','1','1','0','1','0','1'},
-        {'1','0','0','0','0','0','1','1'},
-        {'1','0','1','0','1','0','0','1'},
-        {'1','1','1','1','1','1','1','1'}
-    };
-
-//     printf("[%d] \n {%d}", a, b);
-    // i = 14;
-    printf("[%c]", map[height][weight]);
-    (*mlx).ptr = mlx_init();
-    (*mlx).win = mlx_new_window((mlx)->ptr,  1920, 1080, "My Game");
     while(map[height][weight])
     {
       if (map[height][weight]== '1')
       {
-        //   printf("hello");
           rect(mlx->x, mlx->y, (mlx)->ptr, (mlx)->win);
           mlx->x +=100;
           weight++;
@@ -187,8 +190,9 @@ int main()
       }
       else if (map[height][weight] == '2')
       {
-       mlx_pixel_put ((mlx)->ptr, (mlx)->win, mlx->x1, mlx->y1, 14090240);
-    //    line(mlx->x1 , mlx->y1, mlx->ptr, mlx->win);
+        i = 1;
+        mlx->x1 = mlx->x + 50 + mlx->x_step;
+        mlx->y1 = mlx->y + 50 + mlx->y_step;
         mlx->x +=100;
         weight++;
       }
@@ -203,6 +207,70 @@ int main()
       if (map[height] == '\0')
       break;
     }
+    if (i == 1)
+    {
+    player(mlx->x1, mlx->y1, mlx->ptr, mlx->win);
+    rays(mlx->x1, mlx->y1, mlx->ptr, mlx->win, mlx->theta);
+    }
+}
+ 
+int ft_check(int key, cor *mlx)
+{
+    if(key == 126 &&  wall_inter(mlx->x1 + 5 * cos((mlx->theta + 30) * (M_PI / 180)),mlx->y1 + 5 * sin((mlx->theta + 30) * (M_PI / 180))) != '1')
+    {
+                // printf("%d\n", mlx->x_step);
+        // printf("%f\n", mlx->y1);
+        // printf("%d\n", mlx->y_step);
+       
+     mlx_clear_window((mlx)->ptr, (mlx)->win);
+     mlx->x_step += cos((mlx->theta + 30) * (M_PI / 180)) * 4;
+     mlx->y_step += sin((mlx->theta + 30) * (M_PI / 180)) * 4;
+     map_render(mlx);
+    }
+    else if(key == 125  &&  wall_inter(mlx->x1 - 5 * cos((mlx->theta + 30) * (M_PI / 180)),mlx->y1 - 5 * sin((mlx->theta + 30) * (M_PI / 180))) != '1')
+    {
+        // wall_inter(mlx->x1, mlx->y1);
+        //  printf("%f\n", mlx->x1 + cos((mlx->theta + 30) * (M_PI / 180)));
+        // printf("%f\n", mlx->y1);
+        // printf("%d\n", mlx->y_step);
+    mlx_clear_window((mlx)->ptr, (mlx)->win);
+     mlx->x_step -= cos((mlx->theta + 30) * (M_PI / 180)) * 4;
+     mlx->y_step -= sin((mlx->theta + 30) * (M_PI / 180)) * 4;
+     map_render(mlx);
+
+    }
+    else if(key == 123)
+    {
+        mlx->theta -= 10.0;
+    mlx_clear_window((mlx)->ptr, (mlx)->win);
+    map_render(mlx);
+   
+    }
+    else if(key == 124)
+    {
+        mlx->theta += 10.0;
+    mlx_clear_window((mlx)->ptr, (mlx)->win);
+     map_render(mlx);
+    
+    }
+     printf("cos %f\n",mlx->x1 + cos((mlx->theta + 30) * (M_PI / 180)));
+      printf("ssin %f\n",mlx->y1 + sin((mlx->theta + 30) * (M_PI / 180)));
+    return 0;
+} 
+
+int main()
+{
+    cor *mlx;
+    mlx = malloc(sizeof(cor));
+
+    mlx->x=0;
+    mlx->y=0;
+   
+
+    (*mlx).ptr = mlx_init();
+    (*mlx).win = mlx_new_window((mlx)->ptr,  1920, 1080, "My Game");
+    map_render(mlx);
     mlx_hook ((mlx)->win, 2, 0, ft_check, mlx);
+    
     mlx_loop((mlx)->ptr);
 }
