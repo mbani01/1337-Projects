@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub.c                                              :+:      :+:    :+:   */
+/*   3rd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 17:02:36 by mbani             #+#    #+#             */
-/*   Updated: 2019/12/19 18:07:48 by mbani            ###   ########.fr       */
+/*   Updated: 2019/12/20 16:08:04 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,13 @@ typedef struct cor
     float theta;
     float new_theta;
 	void *img;
-    int ang_up;
-    int ang_down;
-    int ang_right;
-    int ang_left;
-    float yinter;
-    float xinter;
+    float xwall;
+    float ywall;
     float delta_x;
     float delta_y;
-    float new_xinter;
-    float new_yinter;
-    float next_xinter;
-    float next_yinter;
-    float wall_xinter;
-    float wall_yinter;
-    int hor_wall;
+    float nextxwall;
+    float nextywall;
+
 
 }cor;
  
@@ -155,83 +147,92 @@ char wall_inter(float x, float y)
     int x_pos;
     int y_pos;
 
-    x_pos = (int)x / 100;
-    y_pos = (int)y / 100;
+    x_pos = floor(x / 100);
+    y_pos = floor(y / 100);
     return (map[y_pos][x_pos]);
 }
 void    ft_ang_direc(cor *mlx)
 {
-    mlx->ang_down = 0;
-    mlx->ang_up = 0;
-    mlx->ang_right = 0;
-    mlx->ang_left = 0;
+    mlx->xwall = 0;
+    mlx->ywall = 0;
     mlx->delta_x = 0;
     mlx->delta_y = 0;
     mlx->new_theta = 0;
-//  printf("theta [%f] newtheta [%f]\n", mlx->theta , mlx->new_theta);
+    mlx->nextxwall = 0;
+    mlx->nextywall = 0;
+
     float theta;
 
     theta = fmod(mlx->theta, 360);
     while (theta < 0)
         theta += 360;
-
+mlx->new_theta = theta;
     if (theta > 0 && theta < 180)
     {
-        mlx->ang_down = 1;
-        printf("down\n");
+        mlx->ywall = floor(mlx->y1 / 100) * 100 + 100;
+        mlx->delta_y = 100;
+        mlx->xwall = mlx->x1 + (mlx->ywall - mlx->y1) / tan((theta * M_PI/180));
+        // printf("down\n");
     }
     else if (theta <= 360 && theta >= 180)
        { 
-           mlx->ang_up = 1;
-           printf("up\n");
-           }
-    if (theta > 270 || theta < 90)
-       { mlx->ang_right = 1;
-       printf("right\n");
-       }
-    else if (theta <= 270 || theta >= 90)
-        {mlx->ang_left = 1;
-        printf("left\n");
+           mlx->ywall = floor(mlx->y1 / 100) * 100 -1;
+           mlx->delta_y = -100;
+           mlx->xwall = mlx->x1 + (mlx->y1 - mlx->ywall) / tan(theta * M_PI/180);
+        //    printf("up\n");
         }
+        
+        mlx->delta_x = 100 / tan(theta * M_PI / 180);
+
+// printf("theta [%f] tan [%f] \n", theta, tan((-theta * M_PI/180)));
+// printf("old theta [%f] tan [%f] \n", mlx->theta, tan(mlx->theta * M_PI/180));
+
+       mlx->nextxwall = mlx->xwall;
+        mlx->nextywall = mlx->ywall; 
+    // if (theta > 270 || theta < 90)
+    //    { 
+    //         mlx->nextxwall = mlx->xwall + mlx->delta_x;
+    //    printf("right\n");
+    //    }
+    // else
+    //     { mlx->nextxwall = mlx->xwall - mlx->delta_x;
+    //     printf("left\n");
+    //     }
+    while (mlx->nextywall <= 1080 && mlx->nextxwall <= 1920 && mlx->nextxwall  >= 0 && mlx->nextywall  >= 0)
+    {
+        
+        if(wall_inter(mlx->nextxwall, mlx->nextywall) == '1')
+        {
+            printf("break");
+        break;
+        }
+        else
+        {printf("plus");
+            mlx->nextxwall += mlx->delta_x;
+        mlx->nextywall += mlx->delta_y; 
+        
+        // printf("xstep [%f]\n", floor(mlx->nextxwall/100));
+        // printf("ystep [%f]\n", floor(mlx->nextywall/100));
+
+        }
+    }
  
-        mlx->new_theta = theta;
+        
+        ray(mlx->x1, mlx->y1,mlx->img, mlx->new_theta, sqrt(((mlx->x1 - mlx->nextxwall)*(mlx->x1 - mlx->nextxwall)) + ((mlx->y1 - mlx->nextywall) * (mlx->y1 - mlx->nextywall))));
         // printf("theta [%f] newtheta [%f]\n", mlx->theta , mlx->new_theta);
 }
 void  hor_inter(cor *mlx)
 {
-    mlx->yinter = 0;
-    mlx->hor_wall = 0;
-
     ft_ang_direc(mlx);
-    mlx->yinter = floor(mlx->y1/100) * 100;
-    mlx->yinter += mlx->ang_down == 1 ? 100 : 0 ;
-    mlx->xinter = mlx->x1 + (mlx->y1 - mlx->yinter)/tan(mlx->new_theta * M_PI / 180);
-    mlx->delta_y = mlx->ang_up == 1 ? -100 : 100;
-    mlx->delta_x = 100 / tan(mlx->new_theta * M_PI / 180);
-    mlx->delta_x *= (mlx->ang_left == 1  && mlx->delta_x > 0) ? -1 : 1;
-    mlx->delta_x *= (mlx->ang_right == 1 && mlx->delta_x < 0) ? -1 : 1;
 
-    mlx->new_xinter = mlx->xinter;
-    mlx->new_yinter = mlx->yinter;
+    // while (mlx->ywall <= 1080 && mlx->xwall <= 1920 && mlx->xwall  >= 0 && mlx->ywall  >= 0)
+    // {
+    //     printf("x: [%.2f], y: [%.2f]\n", mlx-> , mlx-> );
+    //     if (wall_inter(mlx->xwall, mlx->ywall) == '1')
+    //     {
 
-    if (mlx->ang_up == 1)
-        mlx->new_yinter--;
-    while (mlx->next_yinter < 1080 && mlx->next_xinter < 1920 && mlx->next_yinter >= 0 && mlx->next_xinter >= 0)
-    {
-        printf("x: [%.2f], y: [%.2f]\n", mlx->new_xinter, mlx->new_yinter);
-        if (wall_inter(mlx->new_xinter, mlx->new_yinter) == '1')
-        {
-             mlx->hor_wall = 1;
-             mlx->next_xinter = mlx->new_xinter;
-             mlx->next_yinter = mlx->new_yinter;
-            printf("next_xinter [%f] next_yinter [%f]", mlx->next_xinter , mlx->next_yinter);
-             ray(mlx->x1, mlx->y1,mlx->img, mlx->new_theta, sqrt(((mlx->x1 - mlx->new_xinter)*(mlx->x1 - mlx->new_xinter)) + ((mlx->y1 - mlx->new_yinter) * (mlx->y1 - mlx->new_yinter))));
-             break;
-
-            mlx->new_xinter += mlx->delta_x;
-            mlx->new_yinter += mlx->delta_y;
-        }
-    }
+    //     }
+    // }
 }
 void map_render(cor *mlx)
 {
@@ -279,9 +280,9 @@ void map_render(cor *mlx)
     if (i == 1)
     {
     player(mlx->x1, mlx->y1, mlx->img);
-    rays(mlx->x1, mlx->y1, mlx->img, mlx->theta);
+    // rays(mlx->x1, mlx->y1, mlx->img, mlx->theta);
     // hor_inter(mlx);
-// ft_ang_direc(mlx);
+ft_ang_direc(mlx);
     }
     
 }
@@ -312,7 +313,7 @@ int ft_check(int key, cor *mlx)
     }
     else if(key == 123)
     {
-        mlx->theta -= 10.0;
+        mlx->theta -= 5.0;
          mlx_destroy_image((mlx)->ptr, (mlx)->img);
     mlx_clear_window((mlx)->ptr, (mlx)->win);
      mlx->img = mlx_new_image(mlx->ptr, 1920, 1080);
@@ -321,7 +322,7 @@ int ft_check(int key, cor *mlx)
     }
     else if(key == 124)
     {
-        mlx->theta += 10.0;
+        mlx->theta += 5.0;
          mlx_destroy_image((mlx)->ptr, (mlx)->img);
         mlx_clear_window((mlx)->ptr, (mlx)->win);
          mlx->img = mlx_new_image(mlx->ptr, 1920, 1080);

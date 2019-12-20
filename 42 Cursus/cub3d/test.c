@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 12:27:56 by mbani             #+#    #+#             */
-/*   Updated: 2019/12/15 18:21:43 by mbani            ###   ########.fr       */
+/*   Updated: 2019/12/17 17:27:25 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,21 +134,25 @@ void player(int x, int y,void* mlx_ptr, void *mlx_win)
 }
 void rays(int x, int y,void* mlx_ptr, void *mlx_win, float ang)
 {
-    int r = 200;
+    int r = 50;
     int tempx = x;
     int tempy = y;
-    float save = ang;
+    float save = ang - 30;
 // float ang=0.0;
-while (r)
-{
-	while (ang <= save  + 60)
-	{
-		x = cos(ang * M_PI/180) * r + tempx;
-		y = sin(ang * M_PI/180) * r + tempy;
-		mlx_pixel_put (mlx_ptr, mlx_win, x, y, 65535);
-		ang += 0.1;
-	}
-	ang = save;
+
+    // ang = -30;
+	while (ang <=  save + 30)
+    {
+        // ang = save + 30;
+        while (r)
+        {
+		    x = cos(ang * M_PI/180) * r + tempx;
+		    y = sin(ang * M_PI/180) * r + tempy;
+		    mlx_pixel_put (mlx_ptr, mlx_win, x, y, 65535);
+		    r--;;
+	    }
+    r = 50;
+    ang += 5;
 	r--;
 }
 }
@@ -159,8 +163,6 @@ char wall_inter(float x, float y)
 
     x_pos = (int)x / 100;
     y_pos = (int)y / 100;
-    // printf("x [%d]\n", x_pos);
-    // printf("y [%d]\n", y_pos);
     printf("maap [%c]\n", map[y_pos][x_pos]);
     return (map[y_pos][x_pos]);
 }
@@ -223,28 +225,28 @@ void map_render(cor *mlx)
  
 int ft_check(int key, cor *mlx)
 {
-    if(key == 126 &&  wall_inter(mlx->x1 + 5 * cos((mlx->theta + 30) * (M_PI / 180)),mlx->y1 + 5 * sin((mlx->theta + 30) * (M_PI / 180))) != '1')
+    if(key == 126 &&  wall_inter(mlx->x1 + 15 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 + 15 * sin((mlx->theta) * (M_PI / 180))) != '1')
     {
                  
     //        printf("%f\n" ,mlx->theta);
     //  printf("%f\n" ,mlx->theta);
      mlx_clear_window((mlx)->ptr, (mlx)->win);
-     mlx->x_step += cos((mlx->theta + 30) * (M_PI / 180.0)) * 10;
-     mlx->y_step += sin((mlx->theta + 30) * (M_PI / 180.0)) * 10;
+     mlx->x_step += cos((mlx->theta ) * (M_PI / 180.0)) * 10;
+     mlx->y_step += sin((mlx->theta) * (M_PI / 180.0)) * 10;
      printf(" up %d\n", mlx->x_step);
         // printf("%f\n", mlx->y1);
         printf(" up %d\n", mlx->y_step);
      map_render(mlx);
     //  mlx->x_step = 0;
     }
-    else if(key == 125  &&  wall_inter(mlx->x1 - 5 * cos((mlx->theta + 30) * (M_PI / 180)),mlx->y1 - 5 * sin((mlx->theta + 30) * (M_PI / 180))) != '1')
+    else if(key == 125  &&  wall_inter(mlx->x1 - 15 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 - 15 * sin((mlx->theta) * (M_PI / 180))) != '1')
     {
         
     //         printf("%f\n" ,mlx->theta);
     //  printf("%f\n" ,mlx->theta);
     mlx_clear_window((mlx)->ptr, (mlx)->win);
-     mlx->x_step -= cos((mlx->theta + 30) * (M_PI / 180.0)) * 10;
-     mlx->y_step -= sin((mlx->theta + 30) * (M_PI / 180.0)) * 10;
+     mlx->x_step -= cos((mlx->theta ) * (M_PI / 180.0)) * 10;
+     mlx->y_step -= sin((mlx->theta ) * (M_PI / 180.0)) * 10;
      printf(" down %d\n", mlx->x_step);
         printf(" down %d\n", mlx->y_step);
      map_render(mlx);
@@ -321,7 +323,7 @@ int main()
 
     mlx->x=0;
     mlx->y=0;
-   mlx->theta = -30;
+   mlx->theta = 90;
     mlx->x1=0;
     mlx->y1=0;
     mlx->y_step = 0;
@@ -334,6 +336,5 @@ int main()
     
     mlx_hook ((mlx)->win, 2, 0, ft_check, mlx);
     // mlx_hook ((mlx)->win, 3, 0, ft_check2, mlx);
-    
     mlx_loop((mlx)->ptr);
 }
