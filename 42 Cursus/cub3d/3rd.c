@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 17:02:36 by mbani             #+#    #+#             */
-/*   Updated: 2019/12/20 16:08:04 by mbani            ###   ########.fr       */
+/*   Updated: 2019/12/21 15:14:04 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,12 +147,14 @@ char wall_inter(float x, float y)
     int x_pos;
     int y_pos;
 
-    x_pos = floor(x / 100);
-    y_pos = floor(y / 100);
+    x_pos = (int)(x / 100);
+    y_pos = (int)(y / 100);
     return (map[y_pos][x_pos]);
 }
 void    ft_ang_direc(cor *mlx)
 {
+    float wallx = 0;
+    float wally = 0;
     mlx->xwall = 0;
     mlx->ywall = 0;
     mlx->delta_x = 0;
@@ -167,28 +169,24 @@ void    ft_ang_direc(cor *mlx)
     while (theta < 0)
         theta += 360;
 mlx->new_theta = theta;
+
+ mlx->delta_x = (100 / tan(theta * M_PI / 180));
     if (theta > 0 && theta < 180)
     {
         mlx->ywall = floor(mlx->y1 / 100) * 100 + 100;
         mlx->delta_y = 100;
-        mlx->xwall = mlx->x1 + (mlx->ywall - mlx->y1) / tan((theta * M_PI/180));
-        // printf("down\n");
     }
     else if (theta <= 360 && theta >= 180)
        { 
            mlx->ywall = floor(mlx->y1 / 100) * 100 -1;
            mlx->delta_y = -100;
-           mlx->xwall = mlx->x1 + (mlx->y1 - mlx->ywall) / tan(theta * M_PI/180);
-        //    printf("up\n");
+           mlx->delta_x *= -1;
         }
-        
-        mlx->delta_x = 100 / tan(theta * M_PI / 180);
-
-// printf("theta [%f] tan [%f] \n", theta, tan((-theta * M_PI/180)));
-// printf("old theta [%f] tan [%f] \n", mlx->theta, tan(mlx->theta * M_PI/180));
-
+           
+        mlx->xwall = mlx->x1 + (mlx->ywall - mlx->y1) / tan(theta * M_PI/180);
        mlx->nextxwall = mlx->xwall;
         mlx->nextywall = mlx->ywall; 
+
     // if (theta > 270 || theta < 90)
     //    { 
     //         mlx->nextxwall = mlx->xwall + mlx->delta_x;
@@ -198,28 +196,26 @@ mlx->new_theta = theta;
     //     { mlx->nextxwall = mlx->xwall - mlx->delta_x;
     //     printf("left\n");
     //     }
-    while (mlx->nextywall <= 1080 && mlx->nextxwall <= 1920 && mlx->nextxwall  >= 0 && mlx->nextywall  >= 0)
+    while (mlx->nextywall < 1080 && mlx->nextxwall < 1920 && mlx->nextxwall  >= 0 && mlx->nextywall  >= 0)
     {
         
-        if(wall_inter(mlx->nextxwall, mlx->nextywall) == '1')
+        if(mlx->nextywall < 1080 && mlx->nextxwall < 1920 && mlx->nextxwall  >= 0 && mlx->nextywall  >= 0 && wall_inter(mlx->nextxwall, mlx->nextywall) == '1')
         {
-            printf("break");
-        break;
+            wallx = mlx->nextxwall;
+            wally = mlx->nextywall;
+            break;
         }
         else
-        {printf("plus");
+        {
+            img_put(mlx->img, mlx->nextxwall, mlx->nextywall, 16776960);
             mlx->nextxwall += mlx->delta_x;
-        mlx->nextywall += mlx->delta_y; 
-        
-        // printf("xstep [%f]\n", floor(mlx->nextxwall/100));
-        // printf("ystep [%f]\n", floor(mlx->nextywall/100));
-
+            mlx->nextywall += mlx->delta_y; 
+            printf("%.2f | %.2f\n", mlx->nextywall, mlx->nextxwall);
         }
     }
- 
-        
-        ray(mlx->x1, mlx->y1,mlx->img, mlx->new_theta, sqrt(((mlx->x1 - mlx->nextxwall)*(mlx->x1 - mlx->nextxwall)) + ((mlx->y1 - mlx->nextywall) * (mlx->y1 - mlx->nextywall))));
-        // printf("theta [%f] newtheta [%f]\n", mlx->theta , mlx->new_theta);
+    // img_put(mlx->img, mlx->nextxwall, mlx->nextywall, 16776960);
+    if (mlx->nextywall < 1080 && mlx->nextxwall < 1920 && mlx->nextxwall  >= 0 && mlx->nextywall  >= 0)
+        ray(mlx->x1, mlx->y1,mlx->img, theta, sqrt(((mlx->x1 - mlx->nextxwall)*(mlx->x1 - mlx->nextxwall)) + ((mlx->y1 - mlx->nextywall) * (mlx->y1 - mlx->nextywall))));
 }
 void  hor_inter(cor *mlx)
 {
