@@ -8,6 +8,9 @@
         "tuple": "c",
         "utility": "c",
         "*.tcc": "c",
-        "functional": "c"
+        "functional": "c",
+        "string_view": "c",
+        "string": "c",
+        "vector": "c"
     }
 }
