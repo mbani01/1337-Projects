@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/11 17:02:36 by mbani             #+#    #+#             */
-/*   Updated: 2019/12/27 18:47:57 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/01 16:46:23 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,10 @@ typedef struct cor
     int ver_hit;
     int hor_hit;
     void *img_tex;
+    void *img_tex_n;
+    void *img_tex_s;
+    void *img_tex_e;
+    void *img_tex_w;  
     void *img_add;
     int wall_col;
     float offset;
@@ -67,6 +71,7 @@ typedef struct cor
     int *color;
     float img_w;
     int sizeline;
+    int color_tex;
 
 }cor;
  
@@ -74,8 +79,8 @@ typedef struct cor
     {
     {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},
     {'1','0','0','0','0','0','0','0','0','0','1','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1'},
-    {'1','1','1','0','2','0','0','0','0','1','1','1','0','0','0','0','0','0','1','0','0','0','0','0','1','0','0','0','1'},
-    {'1','0','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1','0','0','0','1'},
+    {'1','1','1','0','0','0','0','0','0','1','1','1','0','0','0','0','0','0','1','0','0','0','0','0','1','0','0','0','1'},
+    {'1','0','0','1','0','2','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1','0','0','0','1'},
     {'1','0','1','1','0','0','0','0','0','1','1','1','0','0','0','1','0','0','0','0','0','0','0','0','1','0','0','0','1'},
     {'1','0','0','0','0','0','0','0','0','0','1','1','0','0','0','0','0','1','1','1','0','1','1','1','1','0','0','0','1'},
     {'1','1','1','1','0','1','1','1','1','1','1','1','1','1','0','1','1','1','0','0','0','0','0','0','1','0','0','0','1'},
@@ -229,6 +234,7 @@ void    hor_inter(cor *mlx)
     {
         mlx->ywall = floor(mlx->y1 / 100) * 100 + 100;
         mlx->delta_y = 100;
+        mlx->up = 0;
     }
     else if (mlx->new_theta <= 360 &&mlx->new_theta >= 180)
        { 
@@ -279,6 +285,7 @@ void  ver_inter(cor *mlx)
     { 
         mlx->deltax_ver = 100;
         mlx->x_ver = floor(mlx->x1 / 100) * 100 + 100;
+        mlx->left = 0;
     //    printf("right\n");
     }
     else
@@ -324,7 +331,7 @@ float   t;
     t = 0;
     while(y < start_y)
     {
-        img_put (mlx->img, x, y, 0x0FF0F0);
+        img_put (mlx->img, x, y, 0x1C96FF);
         y++;
         // printf("hello");
     }
@@ -334,11 +341,16 @@ float   t;
             //y_off = mlx->j;
             // printf("%f \n", y_off);
             // printf("%.2f | %.2f\n", mlx->offset, mlx->factor);
-        mlx->wall_col = mlx->color[(int)(mlx->offset + (int)(t) * mlx->img_w)];
-         img_put (mlx->img, x, start_y, mlx->wall_col);
-         t += mlx->factor;
+        // mlx->wall_col = mlx->color[(int)(mlx->offset + (int)(t) * mlx->img_w)];
+         img_put (mlx->img, x, start_y, 0xff0000);
          start_y++;
          //i++;
+    }
+    y = end_y;
+    while (y <= 1080)
+    {
+    img_put (mlx->img, x, y, 0xAFAFAF);
+    y++;
     }
 }
 void draw_wall(cor *mlx, float i)
@@ -353,15 +365,11 @@ void draw_wall(cor *mlx, float i)
     // float y_off;
     float q;
 
-    printf("%f\n", mlx->offset);
-    mlx->img_tex = mlx_xpm_file_to_image(mlx->ptr, "bluestone.xpm", &x, &y);
-    mlx->img_w = y;
-    mlx->img_add = mlx_get_data_addr(mlx->img_tex, &a, &a, &a);
-    mlx->color = (int *)mlx->img_add;
+    // printf("%f\n", mlx->offset);
+// mlx->color = (int *)mlx->img_add;
     mlx->dis_proj = (1920 / 4) / tan(30 * M_PI / 180);
     mlx->wall_height = (100 / mlx->dis * cos(30 * M_PI / 180)) * mlx->dis_proj;
-    mlx->factor = y / mlx->wall_height;
-    mlx->sizeline = sizeline;
+    mlx->factor = mlx->img_w / mlx->wall_height;
     start = (1080 - mlx->wall_height) / 2;
     end = (1080 + mlx->wall_height) / 2;
     ver_line(i, start, end, mlx);
@@ -372,12 +380,22 @@ void cast(cor *mlx)
     mlx->dis = 0;
     int i = 0;
     mlx->offset = 0;
+    int x,y,a;
 
     double ang_var =  60.0 / 1920.0;
     mlx->theta1 = mlx->theta - 30;
     save = mlx->theta + 30;
-
-
+ver_inter(mlx);
+    hor_inter(mlx); 
+    printf("ver[%d] \nhor [%d]", mlx->ver_hit, mlx->hor_hit);
+    // if (mlx->ver_hit)
+    // mlx->img_tex_n = mlx_xpm_file_to_image(mlx->ptr, "redbrick.xpm", &x, &y);
+    // mlx->img_tex_s= mlx_xpm_file_to_image(mlx->ptr, "99.xpm", &x, &y);
+    // mlx->img_tex_e = mlx_xpm_file_to_image(mlx->ptr, "ssmail.xpm", &x, &y);
+    // mlx->img_tex_w = mlx_xpm_file_to_image(mlx->ptr, "mamoousa.xpm", &x, &y);
+    // mlx->img_w = y;
+    // mlx->img_add = mlx_get_data_addr(mlx->img_tex, &a, &a, &a);
+    // mlx->color = (int *)mlx->img_add;
     while (mlx->theta1 <= save)
     {
     ver_inter(mlx);
@@ -386,23 +404,42 @@ void cast(cor *mlx)
     {
     mlx->dis = mlx->hor_dis;
     mlx->hor_hit = 1;
+    mlx->ver_hit = 0;
     mlx->offset = fmod(mlx->nextxwall , 100);
     }
     else
     {
     mlx->dis  = mlx->ver_dis;
    mlx->ver_hit = 1;
+   mlx->hor_hit = 0;
    mlx->offset =  fmod(mlx->nexty_ver , 100);
     }
-   
-    // ray(mlx->x1  * 0.2, mlx->y1  * 0.2,mlx->img, mlx->new_theta, mlx->dis  * 0.2);
+//     printf("ver [%d]\n hor [%d]", mlx->ver_hit, mlx->hor_hit);
+//     if (mlx->ver_hit && mlx->left)
+//         {mlx->img_tex = mlx_xpm_file_to_image(mlx->ptr, "redbrick.xpm", &x, &y);
+//         mlx->img_add = mlx_get_data_addr(mlx->img_tex, &a, &a, &a);
+//     mlx->color = (int *)mlx->img_add;}
+//    else if(mlx->ver_hit && !(mlx->left))
+//        { mlx->img_tex = mlx_xpm_file_to_image(mlx->ptr, "99.xpm", &x, &y);
+//         mlx->img_add = mlx_get_data_addr(mlx->img_tex, &a, &a, &a);
+//     mlx->color = (int *)mlx->img_add;}
+//     else if(mlx->hor_hit && mlx->up)
+//         {mlx->img_tex = mlx_xpm_file_to_image(mlx->ptr, "ssmail.xpm", &x, &y);
+//         mlx->img_add = mlx_get_data_addr(mlx->img_tex, &a, &a, &a);
+//     mlx->color = (int *)mlx->img_add;}
+//     else
+//     {mlx->img_tex = mlx_xpm_file_to_image(mlx->ptr, "mamooussa.xpm", &x, &y);
+//     mlx->img_add = mlx_get_data_addr(mlx->img_tex, &a, &a, &a);
+//     mlx->color = (int *)mlx->img_add;}
+    
+    ray(mlx->x1  * 0.2, mlx->y1  * 0.2,mlx->img, mlx->new_theta, mlx->dis  * 0.2);
     mlx->dis *= cos((mlx->theta1 - mlx->theta) * M_PI/180);
     draw_wall(mlx, (float)i);
      mlx->theta1 += ang_var;
     i++;
     }
 
-
+ 
 }
 void map_render(cor *mlx)
 {
@@ -418,7 +455,7 @@ void map_render(cor *mlx)
     {
       if (map[height][weight]== '1')
       {
-        //   rect(mlx->x * 0.2, mlx->y * 0.2, mlx->img);
+          rect(mlx->x * 0.2, mlx->y * 0.2, mlx->img);
           mlx->x +=100;
           weight++;
       }
@@ -449,7 +486,7 @@ void map_render(cor *mlx)
     }
     if (i == 1)
     {
-    // player(mlx->x1 * 0.2, mlx->y1 * 0.2, mlx->img);
+    player(mlx->x1 * 0.2, mlx->y1 * 0.2, mlx->img);
     // rays(mlx->x1 * 0.2, mlx->y1 * 0.2, mlx->img, mlx->theta);
     // ver_inter(mlx);
 // hor_inter(mlx);
@@ -540,7 +577,7 @@ int main()
 	mlx = malloc(sizeof(cor));
     mlx->x=0;
     mlx->y=0;
-   mlx->theta = 180;
+   mlx->theta = 240;
     mlx->x1=0;
     mlx->y1=0;
     mlx->y_step = 0;
