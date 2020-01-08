@@ -6,15 +6,49 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/22 14:47:08 by mbani             #+#    #+#             */
-/*   Updated: 2020/01/01 18:07:15 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/08 13:44:43 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "get_next_line.h"
 
+t_list *head;
+t_list *new;
+t_list *temp;
 
 
+t_list	*ft_lstnew(int x, int y, float dis)
+{
+	t_list *ptr;
+
+	ptr = malloc(sizeof(t_list));
+	if (!ptr)
+		return (NULL);
+	ptr->x = x;
+   ptr->y = y;
+   ptr->dis = dis;
+	ptr->next = NULL;
+	return (ptr);
+}
+void	ft_lstadd_back(t_list **alst, t_list *new)
+{
+	t_list *p;
+
+	p = *alst;
+	if (*alst == NULL)
+	{
+		*alst = new;
+		new->next = NULL;
+	}
+	else
+	{
+		while (p->next)
+			p = p->next;
+		p->next = new;
+		new->next = NULL;
+	}
+}
 void img_put( void *img, int x, int y, int color)
 {
 	int endian;
@@ -26,7 +60,7 @@ void img_put( void *img, int x, int y, int color)
 	    add[y * (int)g_width + x] = color;
 }
 
-void rect(int x, int y,void *img)
+void rect(int x, int y,void *img, int color)
 {
     int lenX;
     int lenY;
@@ -39,7 +73,7 @@ void rect(int x, int y,void *img)
         {
             while(y != lenY)
             {
-                img_put (img, x, y, 199423);
+                img_put (img, x, y, color);
                 y++;
             }
             y -= (tile_size * 0.25);
@@ -259,12 +293,19 @@ void draw_wall(t_cor *mlx, float i)
 
 
 
-void player_check(int i, char p, t_cor *mlx)
+void 
+player_check(int i, char p, int a, t_cor *mlx)
 {
+    if (p == 'N' && a == 1)
+        mlx->theta = 270;
+    else if (p == 'S' && a == 1)
+        mlx->theta = 90;
+    else if (p == 'E' && a == 1)
+        mlx->theta = 0;
+    else if (p == 'W' && a == 1)
+        mlx->theta = 180;
     if (i == 0)
-        // (void)i;
         img_put (mlx->img, mlx->x1 * 0.25, mlx->y1 * 0.25, 14090240);
-            // player(mlx->x1, mlx->y1, mlx->img);
     else 
     {
     perror("Error\n(Player)");
@@ -273,13 +314,30 @@ void player_check(int i, char p, t_cor *mlx)
     (void)p;
 }
 
+void sp_dis(t_cor *mlx)
+{
+     t_list *tmp;
+
+     tmp = head;
+     while (tmp)
+     {
+         tmp->dis = sqrt(pow((tmp->x - mlx->x1),2) + pow(tmp->y - mlx->y1,2));
+         tmp = tmp->next;
+     }
+}
+
 void map_render(t_cor *mlx)
 {
     int i;
     char p;
     int height = 0;
     int weight = 0;
-    
+    static int a;
+
+
+if(a == 0)
+   head = NULL; 
+    a += 1;
     i = -1;
     mlx->x=0;
     mlx->y=0;
@@ -287,7 +345,7 @@ void map_render(t_cor *mlx)
     {
       if (g_map[height][weight]== '1')
       {
-           rect(mlx->x * 0.25, mlx->y * 0.25, mlx->img);
+           rect(mlx->x * 0.25, mlx->y * 0.25, mlx->img, 199423);
           mlx->x +=tile_size;
           weight++;
       }
@@ -305,6 +363,21 @@ void map_render(t_cor *mlx)
         mlx->x +=tile_size;
         weight++;
       }
+      else if (g_map[height][weight] == '2')
+      {
+          if (a == 1)
+          {
+             mlx->dis = 0;
+            new = ft_lstnew((weight * tile_size) + tile_size / 2, (height * tile_size) + tile_size / 2, mlx->dis);
+          ft_lstadd_back(&head, new);
+          weight++;
+          }
+          else
+          {
+              weight++;
+          }
+          
+      }
      else if (g_map[height][weight] != '\0') 
     {
           perror("Error\n(Player)");
@@ -320,17 +393,20 @@ void map_render(t_cor *mlx)
 
     }
     if (i >= 0)
-      player_check(i, p, mlx);
+      player_check(i, p, a,mlx);
       else
       {
           perror("Error\n(Player)");
 		    exit(0);
     }
+    sp_dis(mlx);
+    
 }
 
 void cast(t_cor *mlx)
 {
     map_render(mlx);
+    ft_sprite(mlx);
     float save;
     mlx->dis = 0;
     int i = 0;
@@ -341,11 +417,13 @@ void cast(t_cor *mlx)
     mlx->theta1 = mlx->theta - FOV / 2;
     save = mlx->theta + FOV / 2;
 
+    
+    temp = head;
 
-    mlx->img_tex_n = mlx_xpm_file_to_image(mlx->ptr, "redbrick.xpm", &x, &y1);
-    mlx->img_tex_s = mlx_xpm_file_to_image(mlx->ptr, "wall.xpm", &x, &y);
-    mlx->img_tex_e = mlx_xpm_file_to_image(mlx->ptr, "greystone.xpm", &x, &y2);
-    mlx->img_tex_w = mlx_xpm_file_to_image(mlx->ptr, "bluestone.xpm", &x, &y3);
+    mlx->img_tex_n = mlx_xpm_file_to_image(mlx->ptr, g_npath, &x, &y1);
+    mlx->img_tex_s = mlx_xpm_file_to_image(mlx->ptr, g_spath, &x, &y);
+    mlx->img_tex_e = mlx_xpm_file_to_image(mlx->ptr, g_eapath, &x, &y2);
+    mlx->img_tex_w = mlx_xpm_file_to_image(mlx->ptr, g_wepath, &x, &y3);
     
     while (mlx->theta1 <= save)
     {
@@ -446,6 +524,27 @@ void cast(t_cor *mlx)
     }
     return 0;
 }
+void    ft_sprite(t_cor *mlx)
+{
+    float X_inter;
+    float Y_inter;
+    float theta_sp;
+    temp = head;
+    
+    X_inter = temp->x - mlx->x1;
+    Y_inter = temp->y - mlx->y1;
+    theta_sp = atan2(Y_inter, X_inter);
+    theta_sp *= (180/M_PI);
+    if (theta_sp < 0)
+        theta_sp += 360;
+    Y_inter = mlx->theta + FOV/2 - theta_sp;
+    if (theta_sp > 270 && mlx->theta < 90)
+        Y_inter = mlx->theta + FOV/2 - theta_sp + 360;
+    if (theta_sp < 90  && mlx->theta > 270)
+        Y_inter = mlx->theta + FOV/2 - theta_sp - 360;
+
+    X_inter = Y_inter * g_width / (float)  FOV;
+}
 
 int main()
 {
@@ -458,7 +557,6 @@ int main()
     int i = 0;
     mlx->y_step = 0;
     mlx->x_step = 0;
-    mlx->theta = 180;
     file_cub(mlx);
     mlx->ptr = mlx_init();
     mlx->win = mlx_new_window(mlx->ptr,  g_width, g_height, "My Game");
@@ -468,5 +566,4 @@ int main()
     mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     mlx_hook ((mlx)->win, 2, 0, ft_check, mlx);
     mlx_loop(mlx->ptr);
-    
 }

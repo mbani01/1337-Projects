@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/22 14:59:49 by mbani             #+#    #+#             */
-/*   Updated: 2019/12/31 17:59:44 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/08 10:51:42 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ char *g_spath;
 char *g_wepath;
 char *g_eapath;
 char *g_sprit;
+
+
+typedef struct		s_list
+{
+	int			x;
+   int y;
+   float dis;
+	struct s_list	*next;
+}					t_list;
 
 typedef struct s_cor
 {
@@ -90,6 +99,7 @@ typedef struct s_cor
     int color_tex;
     int map_rows;
     int map_col;
+    float sp_dis;
 
 
 } t_cor;
@@ -98,4 +108,6 @@ void file_check(char *line);
 void file_cub(t_cor *mlx);
 int	ft_atoi(const char *str);
 char    *ft_strdup1(const char *s1);
+char	*ft_strchr(const char *s, int c);
+void    ft_sprite(t_cor *mlx);
 #endif

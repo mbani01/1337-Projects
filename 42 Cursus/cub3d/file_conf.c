@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/29 14:11:05 by mbani             #+#    #+#             */
-/*   Updated: 2019/12/31 17:25:35 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/08 10:04:58 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,15 @@ void file_check(char *line)
     else if (line[0] == 'C')
         sky_col(line + 2);
     else if (line[0] == 'N' && line[1] == 'O')
-        g_npath = ft_strdup1(line + 2);
+        g_npath = ft_strdup1(line + 3);
     else if (line[0] == 'S' && line[1] == 'O')
-        g_spath = ft_strdup(line + 2);   
+        g_spath = ft_strdup(line + 3);   
     else if (line[0] == 'W' && line[1] == 'E')
-        g_wepath = ft_strdup(line + 2);
+        g_wepath = ft_strdup(line + 3);
     else if (line[0]  == 'E' && line[1] == 'A')
-        g_eapath = ft_strdup(line + 2);
+        g_eapath = ft_strdup(line + 3);
     else if (line [0] == 'S')
-        g_sprit = ft_strdup(line + 2);
+        g_sprit = ft_strdup(line + 3);
     else if (line[0] == '1' || line[0] == '0' || line[0] == ' ' || line[0] == '\0')
         (void) line;
     else
@@ -88,7 +88,6 @@ void file_check(char *line)
 		perror("Error\n(File)");
 		exit(0);
     }
-    
     
 }
 void map_check(int j, t_cor *mlx)
@@ -129,12 +128,17 @@ void map_fil(int i, t_cor *mlx)
     fd = open("map.cub", O_RDONLY);
     while (get_next_line(fd, &line))
     {
-        if((line[0] == '1' || line[0] == '0' ))
+        if((line[0] == '1' || line[0] == '0'))
         {
 			g_map[i] = ft_strdup1(line);
         free(line);
         i++;
 		}
+        else if (line[0] == '\0' && i > 0)
+        {
+        perror("Error\n(invalid map)");
+		exit(0);
+        }       
     }
     if((line[0] == '1' || line[0] == '0'))
     {g_map[i] = ft_strdup1(line);
