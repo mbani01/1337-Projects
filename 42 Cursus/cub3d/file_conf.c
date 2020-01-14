@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/29 14:11:05 by mbani             #+#    #+#             */
-/*   Updated: 2020/01/08 10:04:58 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/13 11:39:59 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void file_check(char *line)
     else if (line[0]  == 'E' && line[1] == 'A')
         g_eapath = ft_strdup(line + 3);
     else if (line [0] == 'S')
-        g_sprit = ft_strdup(line + 3);
+        g_sprit = ft_strdup(line + 2);
     else if (line[0] == '1' || line[0] == '0' || line[0] == ' ' || line[0] == '\0')
         (void) line;
     else
