@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/22 14:59:49 by mbani             #+#    #+#             */
-/*   Updated: 2020/01/13 16:07:24 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/14 22:17:19 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,4 +115,6 @@ char	*ft_strchr(const char *s, int c);
 void    ft_sprite(t_cor *mlx, float dis);
 void sort_sprite(t_list **head1);
 void sprites(t_cor *mlx);
+int rgb_to_int(int r, int g, int b);
+int shadow_effect(int rgb, float dis);
 #endif

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/22 14:47:08 by mbani             #+#    #+#             */
-/*   Updated: 2020/01/14 15:02:12 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/15 18:09:36 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,6 @@ void    hor_inter(t_cor *mlx)
     mlx->hor_dis = 0;
     mlx->ver_hit = 0;
     mlx->up = 0;
-int i:3;
    
     nor_angle(mlx);
  mlx->delta_x = (tile_size / tan(mlx->new_theta * M_PI / 180));
@@ -251,14 +250,6 @@ void  ver_inter(t_cor *mlx)
            mlx->x_ver = mlx->nextx_ver;
            break;
        }
-        // else if (wall_inter2(mlx->nextxwall, mlx->nextywall, mlx) == '2')
-        // {
-        //    mlx->nexty_ver += mlx->deltay_ver;
-        //    mlx->nextx_ver += mlx->deltax_ver;
-        //     // if (head && mlx->dis > head->dis)
-        //     // // printf("yes\n");
-        //     //     ft_sprite(mlx);
-        // }
        else
        {
            mlx->nexty_ver += mlx->deltay_ver;
@@ -279,20 +270,20 @@ void ver_line(float x, float start_y, float end_y, t_cor *mlx)
     
     while(y < start_y)
     {
-        img_put (mlx->img, x, y, 0x1C96FF);
+        img_put (mlx->img, x, y, rgb_to_int(g_sred, g_sgreen, g_sblue));
         y++;
     }
     while (start_y < end_y)
     {
         mlx->wall_col = mlx->color[(int)(mlx->offset + (int)(t) * mlx->img_w)];
-         img_put (mlx->img, x, start_y,mlx->wall_col);
+         img_put (mlx->img, x, start_y, shadow_effect(mlx->wall_col, mlx->dis));
           t += mlx->factor;
          start_y++;
     }
     y = end_y;
     while (y < g_height)
     {
-    img_put (mlx->img, x, y, 0xAFAFAF);
+    img_put (mlx->img, x, y, rgb_to_int(g_fred, g_fgreen, g_fblue));
     y++;
     }
 }
@@ -440,10 +431,14 @@ void cast(t_cor *mlx)
     
     temp = head;
 
-    mlx->img_tex_n = mlx_xpm_file_to_image(mlx->ptr, g_npath, &x, &y1);
-    mlx->img_tex_s = mlx_xpm_file_to_image(mlx->ptr, g_spath, &x, &y);
-    mlx->img_tex_e = mlx_xpm_file_to_image(mlx->ptr, g_eapath, &x, &y2);
-    mlx->img_tex_w = mlx_xpm_file_to_image(mlx->ptr, g_wepath, &x, &y3);
+   if (!(mlx->img_tex_n = mlx_xpm_file_to_image(mlx->ptr, g_npath, &x, &y1)) || 
+   !(mlx->img_tex_s = mlx_xpm_file_to_image(mlx->ptr, g_spath, &x, &y)) ||
+   !(mlx->img_tex_e = mlx_xpm_file_to_image(mlx->ptr, g_eapath, &x, &y2)) ||
+   !(mlx->img_tex_w = mlx_xpm_file_to_image(mlx->ptr, g_wepath, &x, &y3)))
+    {
+        perror("wrong_path");
+        exit (0);
+    }
 
     
     while (mlx->theta1 <= save)
@@ -500,25 +495,25 @@ void cast(t_cor *mlx)
 {
     
     if(key == 13 &&  wall_inter(mlx->x1 + 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 + 30 * sin((mlx->theta) * (M_PI / 180))) != '1' 
-    && wall_inter(mlx->x1 + 50 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 + 50 * sin((mlx->theta) * (M_PI / 180))) != '2')
+    && wall_inter(mlx->x1 + 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 + 30 * sin((mlx->theta) * (M_PI / 180))) != '2')
     {
      mlx_destroy_image((mlx)->ptr, (mlx)->img);
      mlx_clear_window((mlx)->ptr, (mlx)->win);
      mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
-     mlx->x_step += cos((mlx->theta ) * (M_PI / 180.0)) * 10;
-     mlx->y_step += sin((mlx->theta) * (M_PI / 180.0)) * 10;
+     mlx->x_step += cos((mlx->theta ) * (M_PI / 180.0)) * 20;
+     mlx->y_step += sin((mlx->theta) * (M_PI / 180.0)) * 20;
      cast(mlx);
      map_render(mlx);
      mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     }
     else if(key == 1  &&  wall_inter(mlx->x1 - 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 - 30 * sin((mlx->theta) * (M_PI / 180))) != '1' 
-    &&  wall_inter(mlx->x1 - 50 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 - 50 * sin((mlx->theta) * (M_PI / 180))) != '2')
+    &&  wall_inter(mlx->x1 - 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 - 30 * sin((mlx->theta) * (M_PI / 180))) != '2')
     {
         mlx_destroy_image((mlx)->ptr, (mlx)->img);
     mlx_clear_window((mlx)->ptr, (mlx)->win);
      mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
-     mlx->x_step -= cos((mlx->theta) * (M_PI / 180.0)) * 10;
-     mlx->y_step -= sin((mlx->theta) * (M_PI / 180.0)) * 10;
+     mlx->x_step -= cos((mlx->theta) * (M_PI / 180.0)) * 20;
+     mlx->y_step -= sin((mlx->theta) * (M_PI / 180.0)) * 20;
      cast(mlx);
      map_render(mlx);
       mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
@@ -543,22 +538,22 @@ void cast(t_cor *mlx)
          map_render(mlx);
         mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     }
-        else if(key == 125)
+        else if(key == 125 &&  wall_start >= -g_height)
     {
     mlx_destroy_image((mlx)->ptr, (mlx)->img);
     mlx_clear_window((mlx)->ptr, (mlx)->win);
      mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
-     wall_start -=5;
+     wall_start -=10;
      cast(mlx);
     map_render(mlx);
      mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     }
-    else if(key == 126)
+    else if(key == 126  &&  wall_start <= g_height)
     {
          mlx_destroy_image((mlx)->ptr, (mlx)->img);
         mlx_clear_window((mlx)->ptr, (mlx)->win);
          mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
-          wall_start +=5;
+          wall_start +=10;
          cast(mlx);
          map_render(mlx);
         mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
@@ -580,9 +575,12 @@ void sp_render(t_cor *mlx, int x, int y, int sp_size)
 
 
 
-    mlx->img_sp = mlx_xpm_file_to_image(mlx->ptr, g_sprit, &x_s, &y_s);
+    if ( !(mlx->img_sp = mlx_xpm_file_to_image(mlx->ptr, g_sprit, &x_s, &y_s)))
+    {
+        perror("wrong_path");
+        exit (0);
+    }    
     add = (int *)mlx_get_data_addr(mlx->img_sp, &a, &a, &a);
-
     while (++i < sp_size)
     {
         if (x + i < 0 || x + i > g_width)
@@ -592,11 +590,11 @@ void sp_render(t_cor *mlx, int x, int y, int sp_size)
         j = -1;
         while (++j < sp_size)
         {
-            if (y + j + wall_start < 0 || y + j > g_height)
+            if (y + j + wall_start < 0 || y + j + wall_start > g_height)
                 continue;
             color = add[(x_s * (j * y_s / sp_size)) + (i * x_s / sp_size)];
-            if(color != 0)
-                img_put (mlx->img, (x + i), y + j + wall_start, color);
+            if(color != add[0])
+                img_put (mlx->img, (x + i), y + j + wall_start, shadow_effect(color, mlx->sp_dis));
         }
     }  
 }
@@ -623,7 +621,7 @@ void sort_sprite(t_list **head1)
     t_list  *swap;
 
     temp1 = *head1;
-    while(temp1)
+    while (temp1)
     {
         temp_next = temp1->next;
         while (temp_next)
@@ -651,11 +649,12 @@ void    ft_sprite(t_cor *mlx, float dis)
     float theta_sp;
     float ps_ang;
     temp = head;
+    mlx->sp_dis = dis;
     
     theta_sp = atan2(head->y - mlx->y1, head->x - mlx->x1);
-   while (theta_sp - (mlx->theta *( M_PI / 180)) > M_PI)
+   while (theta_sp - (mlx->theta * (M_PI / 180)) > M_PI)
 		theta_sp -= 2 * M_PI;
-	while (theta_sp - (mlx->theta *( M_PI / 180)) < -M_PI)
+	while (theta_sp - (mlx->theta * (M_PI / 180)) < -M_PI)
 		theta_sp += 2 * M_PI;
     if (g_height > g_width)
 		sp_size = (g_height / (float) (dis)) * tile_size;
@@ -688,8 +687,8 @@ int main()
     mlx = malloc(sizeof(t_cor));
     mlx->x=0;
     mlx->y=0;
-    mlx->x1=0;
-    mlx->y1=0;
+    mlx->x1 = 0;
+    mlx->y1 = 0;
     int i = 0;
     mlx->y_step = 0;
     mlx->x_step = 0;

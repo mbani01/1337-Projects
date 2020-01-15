@@ -6,15 +6,69 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/29 14:11:05 by mbani             #+#    #+#             */
-/*   Updated: 2020/01/13 11:39:59 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/15 17:55:00 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "get_next_line.h"
 
+
+int	ft_isdigit(int c)
+{
+	if ((c >= '0' && c <= '9') || c == ',')
+		return (1);
+	else
+		return (0);
+}
+void res_error(char *line)
+{
+    int i;
+
+    i = 0;
+    while (*line)
+    {
+        if (*line != ' ' && (*line > '9' || *line < '0' ))
+        {
+		perror("Error\n(Resolution)");
+		exit(0);
+	    }
+        if (*line == ' ')
+        i += 1;
+        line++;
+    }
+    if (i != 1)
+    {
+		perror("Error\n(Resolution)");
+    	exit(0);
+	}
+    
+}
+void color_check(char *line)
+{
+    int i;
+
+    i = 0;
+    while (*line)
+    {
+        if (*line == ',')
+        i++;
+        if (!ft_isdigit(*line))
+	    {
+		    perror("Error\n(Colors)");
+		    exit(0);
+    	}
+        line++;
+    }
+    if (i != 2)
+    {
+	    perror("Error\n(Colors)");
+	    exit(0);
+	}
+}
 void res_check(char *line)
 {
+    res_error(line);
 	g_width = ft_atoi(line);
 	while (*line != ' ')
 		line++;
@@ -31,12 +85,13 @@ void res_check(char *line)
 
 void floor_col(char *line)
 {
+    color_check(line);
     g_fred = ft_atoi(line);
     while (*line != ',')
     line++;
+    g_fgreen = ft_atoi(line + 1);
     line += 1;
-    g_fgreen = ft_atoi(line);
-    while (*line != ',')
+    while (*line!= ',')
     line++;
     g_fblue = ft_atoi(line + 1);
     if (g_fred > 255 || g_fred < 0 || g_fgreen > 255 || g_fgreen < 0 || g_fblue > 255 || g_fblue < 0)
@@ -48,11 +103,12 @@ void floor_col(char *line)
 
 void sky_col(char *line)
 {
+    color_check(line);   
     g_sred = ft_atoi(line);
     while (*line != ',')
     line++;
-    line += 1;
-    g_sgreen = ft_atoi(line);
+     g_sgreen = ft_atoi(line + 1);
+     line += 1;
     while (*line != ',')
     line++;
     g_sblue = ft_atoi(line + 1);
@@ -65,27 +121,58 @@ void sky_col(char *line)
 
 void file_check(char *line)
 {
+    static int i;
+    
 	if (line [0] ==  'R')
-		res_check((line + 2));
+		{
+            res_check((line + 2));
+            i++;
+        }
     else if (line[0] == 'F')
-        floor_col(line + 2);
+       {
+            floor_col(line + 2);
+            i++;
+        }
     else if (line[0] == 'C')
-        sky_col(line + 2);
+        {
+            sky_col(line + 2);
+            i++;
+        }
     else if (line[0] == 'N' && line[1] == 'O')
-        g_npath = ft_strdup1(line + 3);
+        {
+            g_npath = ft_strdup1(line + 3);
+            i++;
+        }
     else if (line[0] == 'S' && line[1] == 'O')
-        g_spath = ft_strdup(line + 3);   
+        {
+            g_spath = ft_strdup(line + 3);
+            i++;
+        }   
     else if (line[0] == 'W' && line[1] == 'E')
-        g_wepath = ft_strdup(line + 3);
+        {
+            g_wepath = ft_strdup(line + 3);
+            i++;
+        }
     else if (line[0]  == 'E' && line[1] == 'A')
+    {
         g_eapath = ft_strdup(line + 3);
+        i++;
+    }
     else if (line [0] == 'S')
-        g_sprit = ft_strdup(line + 2);
+       {
+           g_sprit = ft_strdup(line + 2);
+           i++;
+       }
     else if (line[0] == '1' || line[0] == '0' || line[0] == ' ' || line[0] == '\0')
         (void) line;
     else
     {
 		perror("Error\n(File)");
+		exit(0);
+    }
+   if (i > 8)
+    {
+		perror("Error\n(Duplicated)");
 		exit(0);
     }
     

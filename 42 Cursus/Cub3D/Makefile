@@ -6,7 +6,7 @@
 #    By: mbani <mbani@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/08 14:30:29 by mbani             #+#    #+#              #
-#    Updated: 2020/01/12 17:02:20 by mbani            ###   ########.fr        #
+#    Updated: 2020/01/14 22:29:52 by mbani            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,4 +14,4 @@
 all = make
 
 make :
-	gcc *.c -lmlx -framework appkit -framework opengl
+	gcc *.c -lmlx -framework appkit -framework opengl -o cub3D
