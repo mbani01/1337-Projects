@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/22 14:47:08 by mbani             #+#    #+#             */
-/*   Updated: 2020/01/15 18:09:36 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/18 15:08:03 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,12 +270,14 @@ void ver_line(float x, float start_y, float end_y, t_cor *mlx)
     
     while(y < start_y)
     {
+         if (x < g_width && y < g_height && x >= 0 && y >= 0)
         img_put (mlx->img, x, y, rgb_to_int(g_sred, g_sgreen, g_sblue));
         y++;
     }
     while (start_y < end_y)
     {
         mlx->wall_col = mlx->color[(int)(mlx->offset + (int)(t) * mlx->img_w)];
+         if (x < g_width && start_y < g_height && x >= 0 && start_y >= 0)
          img_put (mlx->img, x, start_y, shadow_effect(mlx->wall_col, mlx->dis));
           t += mlx->factor;
          start_y++;
@@ -283,6 +285,7 @@ void ver_line(float x, float start_y, float end_y, t_cor *mlx)
     y = end_y;
     while (y < g_height)
     {
+         if (x < g_width && y < g_height && x >= 0 && y >= 0)
     img_put (mlx->img, x, y, rgb_to_int(g_fred, g_fgreen, g_fblue));
     y++;
     }
@@ -491,10 +494,10 @@ void cast(t_cor *mlx)
     sprites(mlx);
 }
 
-    int ft_check(int key, t_cor *mlx)
+int ft_check(t_cor *mlx)
 {
     
-    if(key == 13 &&  wall_inter(mlx->x1 + 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 + 30 * sin((mlx->theta) * (M_PI / 180))) != '1' 
+    if(t_go.go_for == 1 &&  wall_inter(mlx->x1 + 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 + 30 * sin((mlx->theta) * (M_PI / 180))) != '1' 
     && wall_inter(mlx->x1 + 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 + 30 * sin((mlx->theta) * (M_PI / 180))) != '2')
     {
      mlx_destroy_image((mlx)->ptr, (mlx)->img);
@@ -506,7 +509,7 @@ void cast(t_cor *mlx)
      map_render(mlx);
      mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     }
-    else if(key == 1  &&  wall_inter(mlx->x1 - 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 - 30 * sin((mlx->theta) * (M_PI / 180))) != '1' 
+    if(t_go.go_back == 1  &&  wall_inter(mlx->x1 - 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 - 30 * sin((mlx->theta) * (M_PI / 180))) != '1' 
     &&  wall_inter(mlx->x1 - 30 * cos((mlx->theta) * (M_PI / 180)),mlx->y1 - 30 * sin((mlx->theta) * (M_PI / 180))) != '2')
     {
         mlx_destroy_image((mlx)->ptr, (mlx)->img);
@@ -518,7 +521,31 @@ void cast(t_cor *mlx)
      map_render(mlx);
       mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     }
-    else if(key == 0)
+    if(t_go.go_left == 1 &&  wall_inter(mlx->x1 + 30 * cos((mlx->theta - 90) * (M_PI / 180)),mlx->y1 + 30 * sin((mlx->theta - 90) * (M_PI / 180))) != '1' 
+    && wall_inter(mlx->x1 + 30 * sin((mlx->theta - 90) * (M_PI / 180)),mlx->y1 + 30 * cos((mlx->theta - 90) * (M_PI / 180))) != '2')
+    {
+     mlx_destroy_image((mlx)->ptr, (mlx)->img);
+     mlx_clear_window((mlx)->ptr, (mlx)->win);
+     mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
+     mlx->x_step += cos((mlx->theta - 90) * (M_PI / 180.0)) * 20;
+     mlx->y_step += sin((mlx->theta - 90) * (M_PI / 180.0)) * 20;
+     cast(mlx);
+     map_render(mlx);
+     mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
+    }
+    if(t_go.go_right == 1  &&  wall_inter(mlx->x1 - 30 * cos((mlx->theta - 90) * (M_PI / 180)),mlx->y1 - 30 * sin((mlx->theta - 90) * (M_PI / 180))) != '1' 
+    &&  wall_inter(mlx->x1 - 30 * cos((mlx->theta - 90) * (M_PI / 180)),mlx->y1 - 30 * sin((mlx->theta - 90) * (M_PI / 180))) != '2')
+    {
+        mlx_destroy_image((mlx)->ptr, (mlx)->img);
+    mlx_clear_window((mlx)->ptr, (mlx)->win);
+     mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
+        mlx->x_step -= cos((mlx->theta - 90) * (M_PI / 180.0)) * 20;
+        mlx->y_step -= sin((mlx->theta - 90) * (M_PI / 180.0)) * 20;
+     cast(mlx);
+     map_render(mlx);
+      mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
+    }
+    if(t_go.see_left == 1)
     {
         mlx->theta -= 10.0;
          mlx_destroy_image((mlx)->ptr, (mlx)->img);
@@ -528,7 +555,7 @@ void cast(t_cor *mlx)
     map_render(mlx);
      mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     }
-    else if(key == 2)
+    if(t_go.see_right == 1)
     {
         mlx->theta += 10.0;
          mlx_destroy_image((mlx)->ptr, (mlx)->img);
@@ -538,27 +565,46 @@ void cast(t_cor *mlx)
          map_render(mlx);
         mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     }
-        else if(key == 125 &&  wall_start >= -g_height)
+    if(t_go.see_up == 1 &&  wall_start >= -g_height)
     {
     mlx_destroy_image((mlx)->ptr, (mlx)->img);
     mlx_clear_window((mlx)->ptr, (mlx)->win);
      mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
-     wall_start -=10;
+     wall_start -=20;
      cast(mlx);
     map_render(mlx);
      mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     }
-    else if(key == 126  &&  wall_start <= g_height)
+    if(t_go.see_down == 1  &&  wall_start <= g_height)
     {
          mlx_destroy_image((mlx)->ptr, (mlx)->img);
         mlx_clear_window((mlx)->ptr, (mlx)->win);
          mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
-          wall_start +=10;
+          wall_start +=20;
          cast(mlx);
          map_render(mlx);
         mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
     }
-    else if (key == 53)
+    if(t_go.jump == 1)
+    {
+        wall_start = 0;
+         mlx_destroy_image((mlx)->ptr, (mlx)->img);
+        mlx_clear_window((mlx)->ptr, (mlx)->win);
+         mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
+          wall_start +=250;
+         cast(mlx);
+         map_render(mlx);
+        mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
+        sleep(4);
+        mlx_destroy_image((mlx)->ptr, (mlx)->img);
+        mlx_clear_window((mlx)->ptr, (mlx)->win);
+         mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
+          wall_start -=250;
+         cast(mlx);
+         map_render(mlx);
+        mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
+    }
+    if (t_go.exit == 1)
     {
         exit(0);
     }
@@ -681,7 +727,79 @@ void sprites(t_cor *mlx)
     }
 }
 
-int main()
+int ft_keypress(int key)
+{
+    if (key == 13)
+        t_go.go_for = 1;
+    if(key == 1)
+        t_go.go_back = 1;
+    if (key == 0)
+        t_go.go_left = 1;
+    if (key == 2)
+        t_go.go_right = 1;
+    if (key == 125)
+        t_go.see_up = 1;
+    if (key == 126)
+        t_go.see_down = 1;
+    if (key == 124)
+        t_go.see_right = 1;
+    if (key == 123)
+        t_go.see_left = 1;
+    if (key == 53)
+        t_go.exit = 1;
+    if (key == 7)
+        t_go.jump = 1;
+    return (0);
+}
+int ft_keyrel(int key)
+{
+    if (key == 13)
+        t_go.go_for = -1;
+    if(key == 1)
+        t_go.go_back = -1;
+    if (key == 0)
+        t_go.go_left = -1;
+    if (key == 2)
+        t_go.go_right = -1;
+    if (key == 125)
+        t_go.see_up = -1;
+    if (key == 126)
+        t_go.see_down = -1;
+    if (key == 124)
+        t_go.see_right = -1;
+    if (key == 123)
+        t_go.see_left = -1;
+    if (key == 53)
+        t_go.exit = -1;
+    if (key == 7)
+        t_go.jump = -1;
+    return (0);
+}
+int ft_exit()
+{
+    exit(0);
+}
+
+void arg_check(int argc, char **argv, t_cor *mlx)
+{
+    char *s;
+    if (argc != 2 && argc != 3)
+    {
+          perror("Error\n(arguments)");
+		    exit(0);
+    }
+    if (!(ft_strnstr(argv[1], ".cub\0", ft_strlen(argv[1]))))
+    {
+          perror("Error\n(.cub)");
+		    exit(0);     
+    }
+    if (ft_strncmp(argv[2], "--save", 6) == 0)
+        {
+            bmp_file(mlx);
+            exit (0);
+        }
+}
+int main(int argc, char **argv)
 {
     t_cor *mlx;
     mlx = malloc(sizeof(t_cor));
@@ -689,17 +807,19 @@ int main()
     mlx->y=0;
     mlx->x1 = 0;
     mlx->y1 = 0;
-    int i = 0;
     mlx->y_step = 0;
     mlx->x_step = 0;
-    file_cub(mlx);
+    file_cub(mlx, argv[1]);
     mlx->ptr = mlx_init();
-    mlx->win = mlx_new_window(mlx->ptr,  g_width, g_height, "My Game");
+    mlx->win = mlx_new_window(mlx->ptr,  g_width, g_height, "Cub3D");
     mlx->img = mlx_new_image(mlx->ptr, g_width, g_height);
     map_render(mlx);
     cast(mlx);
     mlx_put_image_to_window (mlx->ptr, mlx->win, mlx->img, 0, 0);
-    mlx_hook ((mlx)->win, 2, 0, ft_check, mlx);
-    mlx_loop_hook(mlx->ptr, ft_check, &mlx);
+    mlx_hook (mlx->win, 2, 0, ft_keypress, 0);
+    mlx_hook (mlx->win, 3, 0, ft_keyrel, 0);
+    mlx_hook (mlx->win, 17, 0, ft_exit, 0);
+    mlx_loop_hook(mlx->ptr, ft_check, mlx);
+    arg_check(argc, argv, mlx);
     mlx_loop(mlx->ptr);
 }

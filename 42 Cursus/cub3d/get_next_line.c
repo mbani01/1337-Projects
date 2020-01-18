@@ -6,14 +6,14 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/25 21:52:51 by mbani             #+#    #+#             */
-/*   Updated: 2019/12/02 16:46:38 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/18 15:19:16 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include "get_next_line.h"
 
-#define BUFFER_SIZE 1
+#define BUFFER_SIZE 1024
 
 char	*ft_strjoin(char *s1, char *s2)
 {

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/22 14:59:49 by mbani             #+#    #+#             */
-/*   Updated: 2020/01/14 22:17:19 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/18 15:58:09 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,20 @@ typedef struct		s_list
    float dis;
 	struct s_list	*next;
 }					t_list;
+
+typedef struct		s_bmp
+{
+    unsigned int width;
+    unsigned int height;
+    unsigned short bitcount;
+    unsigned int width_in_bytes;
+    unsigned int img_sz;
+    unsigned int bisize;
+    unsigned int bf0ffbits;
+    unsigned int filesize;
+    unsigned short biplanes;
+    unsigned char *header;
+}					t_bmp;
 
 typedef struct s_cor
 {
@@ -103,12 +117,25 @@ typedef struct s_cor
     int map_col;
     float sp_dis;
     float wall_dis[2560];
-
-
 } t_cor;
+
+struct s_key
+{
+     int go_for;
+    int go_back;
+    int go_left;
+    int go_right;
+    int see_up;
+    int see_down;
+    int exit;
+    int see_right;
+    int see_left;
+    int jump;
+}   t_go;
+
 void res_check(char *line);
 void file_check(char *line);
-void file_cub(t_cor *mlx);
+void file_cub(t_cor *mlx, char *argv);
 int	ft_atoi(const char *str);
 char    *ft_strdup1(const char *s1);
 char	*ft_strchr(const char *s, int c);
@@ -117,4 +144,14 @@ void sort_sprite(t_list **head1);
 void sprites(t_cor *mlx);
 int rgb_to_int(int r, int g, int b);
 int shadow_effect(int rgb, float dis);
+void	*ft_memcpy(void *dst, const void *src, unsigned int n);
+void bmp_file(t_cor *mlx);
+void	bmp_next(t_cor *mlx, t_bmp *bmp);
+void 	bmp_last(t_bmp *bmp,unsigned char *buf);
+int ft_keypress(int key);
+int ft_keyrel(int key);
+char	*ft_strnstr(const char *haystack, const char *needle, unsigned int len);
+int	ft_strncmp(const char *s1, const char *s2, unsigned int n);
+void rm_sp(char **s);
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/29 14:11:05 by mbani             #+#    #+#             */
-/*   Updated: 2020/01/15 17:55:00 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/18 16:11:43 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,17 @@ void res_error(char *line)
     i = 0;
     while (*line)
     {
-        if (*line != ' ' && (*line > '9' || *line < '0' ))
+        if ((*line > '9' || *line < '0' ) && *line != ' ')
         {
 		perror("Error\n(Resolution)");
 		exit(0);
 	    }
         if (*line == ' ')
-        i += 1;
+        {
+            i += 1;
+            line +=1;
+            rm_sp(&line);
+        }
         line++;
     }
     if (i != 1)
@@ -68,11 +72,13 @@ void color_check(char *line)
 }
 void res_check(char *line)
 {
+    rm_sp(&line);
     res_error(line);
 	g_width = ft_atoi(line);
 	while (*line != ' ')
 		line++;
-	g_height = ft_atoi(line + 1);
+    rm_sp(&line);
+	g_height = ft_atoi(line);
 	g_width = g_width > 2560 ? 2560 : g_width;
 	g_height = g_height > 1440 ? 1440 : g_height;
 	if (g_height <= 0 || g_width <= 0)
@@ -85,6 +91,7 @@ void res_check(char *line)
 
 void floor_col(char *line)
 {
+    rm_sp(&line);
     color_check(line);
     g_fred = ft_atoi(line);
     while (*line != ',')
@@ -103,6 +110,7 @@ void floor_col(char *line)
 
 void sky_col(char *line)
 {
+    rm_sp(&line);
     color_check(line);   
     g_sred = ft_atoi(line);
     while (*line != ',')
@@ -118,10 +126,18 @@ void sky_col(char *line)
 		exit(0);
 	}
 }
+void rm_sp(char **s)
+{
+    while (**s == ' ')
+        *s += 1;
+}
 
 void file_check(char *line)
 {
     static int i;
+    static int  j;
+    
+    j=8;
     
 	if (line [0] ==  'R')
 		{
@@ -140,27 +156,37 @@ void file_check(char *line)
         }
     else if (line[0] == 'N' && line[1] == 'O')
         {
-            g_npath = ft_strdup1(line + 3);
+            line += 3;
+            rm_sp(&line);
+            g_npath = ft_strdup1(line);
             i++;
         }
     else if (line[0] == 'S' && line[1] == 'O')
         {
-            g_spath = ft_strdup(line + 3);
+            line += 3;
+            rm_sp(&line);
+            g_spath = ft_strdup1(line);
             i++;
         }   
     else if (line[0] == 'W' && line[1] == 'E')
         {
-            g_wepath = ft_strdup(line + 3);
+             line += 3;
+            rm_sp(&line);
+            g_wepath = ft_strdup1(line);
             i++;
         }
     else if (line[0]  == 'E' && line[1] == 'A')
     {
-        g_eapath = ft_strdup(line + 3);
+            line += 3;
+            rm_sp(&line);
+            g_eapath = ft_strdup1(line);
         i++;
     }
     else if (line [0] == 'S')
        {
-           g_sprit = ft_strdup(line + 2);
+             line += 2;
+            rm_sp(&line);
+            g_sprit = ft_strdup1(line);
            i++;
        }
     else if (line[0] == '1' || line[0] == '0' || line[0] == ' ' || line[0] == '\0')
@@ -175,7 +201,6 @@ void file_check(char *line)
 		perror("Error\n(Duplicated)");
 		exit(0);
     }
-    
 }
 void map_check(int j, t_cor *mlx)
 {
@@ -218,14 +243,15 @@ void map_fil(int i, t_cor *mlx)
         if((line[0] == '1' || line[0] == '0'))
         {
 			g_map[i] = ft_strdup1(line);
-        free(line);
-        i++;
+            i++;
 		}
         else if (line[0] == '\0' && i > 0)
         {
-        perror("Error\n(invalid map)");
-		exit(0);
+            free(line);
+            perror("Error\n(invalid map)");
+		    exit(0);
         }       
+        free(line);
     }
     if((line[0] == '1' || line[0] == '0'))
     {g_map[i] = ft_strdup1(line);
@@ -238,24 +264,34 @@ void map_fil(int i, t_cor *mlx)
 	map_check(i, mlx);
     
 }
-void file_cub(t_cor *mlx)
+void file_cub(t_cor *mlx, char *argv)
 {
     int fd;
     int i;
     char *line;
+    int j;
 
+    j = 0;
     i = 0;
-    fd = open("map.cub", O_RDONLY);
+    fd = open(argv, O_RDONLY);
     while(get_next_line(fd, &line))
     {
         if((line[0] == '1' || line[0] == '0'))
-        i++;
+            i++;
 		else
-		file_check(line);
+		    {
+                file_check(line);
+                j++;
+            }
 		free(line);
     }
     free(line);
     line = NULL;
+    if (j <= 9)
+    {
+		perror("Error\n(Missing param)");
+		exit(0);
+    }
    map_fil(i, mlx);
    mlx->map_col = i;
 }
