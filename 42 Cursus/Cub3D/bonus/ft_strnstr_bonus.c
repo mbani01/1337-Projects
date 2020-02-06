@@ -1,44 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/11 23:09:16 by mbani             #+#    #+#             */
-/*   Updated: 2020/01/19 21:21:38 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/11 13:20:19 by mbani             #+#    #+#             */
+/*   Updated: 2019/10/22 21:45:04 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-static	char	*ft_strcpy(char *dest, const char *src)
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {
-	int i;
-	int j;
+	size_t	i;
+	int		j;
 
-	j = 0;
 	i = 0;
-	while (src[i] != '\0')
+	j = 0;
+	if (needle[0] == '\0' || haystack == NULL)
+		return ((char *)haystack);
+	while (haystack[i] != '\0' && i < len)
 	{
-		if (src[i] != ' ')
-			dest[j++] = src[i];
+		j = 0;
+		while (haystack[i + j] == needle[j] && i + j < len)
+		{
+			j++;
+			if (needle[j] == '\0')
+				return ((char *)haystack + i);
+		}
 		i++;
 	}
-	dest[j] = '\0';
-	return (dest);
-}
-
-char			*ft_strdup1(const char *s1)
-{
-	char	*str;
-	int		i;
-
-	i = 0;
-	while (s1[i] != '\0')
-		i++;
-	str = (char*)malloc(sizeof(*str) * (i + 1));
-	if (!str)
-		return (NULL);
-	return (ft_strcpy(str, s1));
+	return (NULL);
 }
