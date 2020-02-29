@@ -1,0 +1,10 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-ngx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: \"false\"
+spec:
+    backend:
+      serviceName: ngx-svc
+      servicePort: 82

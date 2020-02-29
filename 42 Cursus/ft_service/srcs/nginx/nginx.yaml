@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata :
+    name: ngx-dep
+    labels:
+        app: web
+spec:
+    selector:
+        matchLabels:
+           app: web
+    template:
+        metadata:
+            name: ngx-pod
+            labels:
+             app: web
+        spec:
+            containers:
+             - name: ngx
+               imagePullPolicy: Never
+               image: my-nginx
+               ports:
+                - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata :
+    name: ftp-dep
+    labels:
+        app: ftp
+spec:
+    selector:
+        matchLabels:
+            app: ftp
+    template:
+        metadata:
+            name: ftp-pod
+            labels:
+             app: ftp
+        spec:
+            volumes:
+                - name: ftp-storage
+                  persistentVolumeClaim:
+                    claimName: ftp-pvc
+            containers:
+             - name: ftp
+               imagePullPolicy: Never
+               image: my-ftp
+               ports:
+                - containerPort: 21
+                - containerPort: 21000
+               volumeMounts:
+                - mountPath: "/home/mbani"
+                  name: ftp-storage
+---
+    apiVersion: v1
+    kind: Service
+    metadata: 
+        name: ngx-svc
+    spec:
+        # type: NodePort
+        ports:
+            - name: https
+              protocol: TCP
+              port: 82
+              targetPort: 80
+            #   nodePort: 80
+        selector:
+            app: web
+---
+apiVersion: v1
+kind: Service
+metadata: 
+    name: ftp-svc
+spec:
+    type: NodePort
+    ports:
+        - name: ftp
+          port: 21
+          targetPort: 21
+          nodePort: 21
+        - name: ftps
+          port: 21000
+          targetPort: 21000
+          nodePort: 21000
+    selector:
+        app: ftp
