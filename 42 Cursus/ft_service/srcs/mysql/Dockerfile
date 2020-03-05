@@ -9,10 +9,12 @@ ENV ip=$ip
 RUN apk update \
 && apk add mariadb mariadb-client openrc \
 && mysql_install_db --user=mysql --datadir=${DB_DATA_PATH}
+
 COPY mariadb-server.cnf /etc/my.cnf.d/
 COPY mysql.sh /
 COPY wpdb1.sql /
 EXPOSE 3306
+# RUN mkdir /var/lib/new
 VOLUME [ "/var/lib/mysql" ]
 ENTRYPOINT sh mysql.sh
 

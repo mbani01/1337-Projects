@@ -15,7 +15,7 @@ spec:
              app: web
         spec:
             containers:
-             - name: ngx
+             - name: nginx
                imagePullPolicy: Never
                image: my-nginx
                ports:
@@ -42,7 +42,7 @@ spec:
                   persistentVolumeClaim:
                     claimName: ftp-pvc
             containers:
-             - name: ftp
+             - name: ftps
                imagePullPolicy: Never
                image: my-ftp
                ports:

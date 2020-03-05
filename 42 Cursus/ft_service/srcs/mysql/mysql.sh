@@ -1,3 +1,7 @@
+# if [ -z "$(ls -A /var/lib/new)" ]; then
+#    cp /var/lib/mysql/* /var/lib/new
+# fi
+# ln -s /var/lib/mysql /var/lib/new
 mkdir /run/openrc
 touch /run/openrc/softlevel
 rc-status
@@ -10,3 +14,5 @@ mysql -u root -e "GRANT ALL ON *.* TO 'admin'@'%'; FLUSH PRIVILEGES;"
 mysql -u root wpdb < /wpdb1.sql 
 rc-update add mariadb default
 tail -f /dev/null
+
+# kubectl cp mysql $(kubectl get pods | grep "mysql-*" | awk '{print $1}'):/var/lib/mysql
