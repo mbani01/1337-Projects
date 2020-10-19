@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata :
+    name: mysql-dep
+    labels:
+        app: mysql
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+           app: mysql
+    template:
+        metadata:
+            name: mysql-pod
+            labels:
+             app: mysql
+        spec:
+            volumes:
+                - name: mysql-storage
+                  persistentVolumeClaim:
+                    claimName: mysql-pvc
+            restartPolicy: Always
+            containers:
+             - name: mysql
+               imagePullPolicy: Never
+               image: mysql
+               ports:
+                - containerPort: 3306
+               volumeMounts:
+                - mountPath: "/var/lib/mysql"
+                  name: mysql-storage
+---
+    apiVersion: v1
+    kind: Service
+    metadata: 
+        name: mysql-svc
+    spec:
+        ports:
+            - name: mysql
+              port: 3306
+        selector:
+            app: mysql
+        clusterIP: 10.96.10.10

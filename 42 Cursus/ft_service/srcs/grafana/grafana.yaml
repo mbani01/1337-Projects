@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata :
+    name: grafana-dep
+    labels:
+        app: grf
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+           app: grf
+    template:
+        metadata:
+            name: grafana-pod
+            labels:
+             app: grf
+        spec:
+            restartPolicy: Always
+            containers:
+             - name: grafana
+               imagePullPolicy: Never
+               image: my-grafana
+               ports:
+                - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata: 
+    name: grafana-svc
+spec:
+    type: NodePort
+    ports:
+        - name: grafana
+          port: 3000
+          targetPort: 3000
+          nodePort: 3000
+    selector:
+        app: grf

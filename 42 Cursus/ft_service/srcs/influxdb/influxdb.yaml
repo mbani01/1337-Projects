@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata :
+    name: influxdb-dep
+    labels:
+        app: infdb
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+           app: infdb
+    template:
+        metadata:
+            name: influxdb-pod
+            labels:
+             app: infdb
+        spec:
+            volumes:
+                - name: telegraf-storage
+                  hostPath:
+                   path: /var/run/docker.sock
+                - name: influxdb-storage
+                  hostPath:
+                    path: /mnt/data/influxdb
+
+            restartPolicy: Always
+            containers:
+             - name: influxdb
+               imagePullPolicy: Never
+               image: my-influxdb
+               ports:
+                - containerPort: 8086
+               volumeMounts:
+                - mountPath: "/var/run/docker.sock"
+                  name: telegraf-storage
+                - mountPath: "/var/lib/influxdb"
+                  name: influxdb-storage
+---
+apiVersion: v1
+kind: Service
+metadata: 
+    name: influxdb-svc
+spec:
+    # type: NodePort
+    ports:
+        - name: influxdb
+          port: 8086
+          targetPort: 8086
+        #   nodePort: 8086
+    selector:
+        app: infdb

@@ -1,0 +1,3 @@
+"CREATE USER 'admin'@'localhost' IDENTIFIED BY '1234'"
+"GRANT ALL ON *.* TO 'admin'@'localhost'; FLUSH PRIVILEGES;"
+"CREATE DATABASE wpdb; use wpdb"

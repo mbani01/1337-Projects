@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "__functional_base": "c",
+        "array": "c",
+        "istream": "c",
+        "locale": "c",
+        "memory": "c",
+        "tuple": "c",
+        "utility": "c",
+        "*.tcc": "c",
+        "functional": "c",
+        "string_view": "c",
+        "string": "c",
+        "vector": "c",
+        "libft.h": "c",
+        "algorithm": "c"
+    }
+}
