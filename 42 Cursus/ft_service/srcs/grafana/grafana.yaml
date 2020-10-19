@@ -5,6 +5,7 @@ metadata :
     labels:
         app: grf
 spec:
+    replicas: 1
     selector:
         matchLabels:
            app: grf

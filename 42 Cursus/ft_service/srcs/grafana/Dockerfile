@@ -19,7 +19,7 @@ RUN tar -zxvf grafana-6.6.2.linux-amd64.tar.gz && \
  rm -f /grafana/conf/*.ini grafana-$GRAFANA_VERSION.linux-x64.tar.gz && \
  apk del .build-deps
 COPY defaults.ini /grafana/conf/
-# COPY grafana.db /grafana/data
 COPY start.sh /
+COPY grafana.db /grafana/data/
 EXPOSE 3000
 ENTRYPOINT ["sh", "/start.sh" ]

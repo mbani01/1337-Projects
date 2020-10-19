@@ -2,7 +2,7 @@ minikube delete
 minikube start --extra-config=apiserver.service-node-port-range=1-65535
 eval $(minikube docker-env)
 minikube ssh 'sudo mkdir /mnt/data; sudo mkdir /mnt/data/ftp; sudo chmod 777 /mnt/data/ '
-minikube ssh 'sudo mkdir /mnt/data/mysql; sudo chmod 777 /mnt/data/ '
+minikube ssh 'sudo mkdir /mnt/data/influxdb; sudo mkdir /mnt/data/mysql; sudo chmod 777 /mnt/data/ '
 kubectl apply -f srcs/ftps/ftp_pv.yaml
 kubectl apply -f srcs/ftps/ftp_pvc.yaml
 kubectl apply -f srcs/mysql/mysql-pv.yml
@@ -27,4 +27,4 @@ sleep 20
 kubectl cp srcs/mysql/sc.sh $(kubectl get pods | grep "mysql*" | grep -v pause| awk '{print $1}'):/var/lib/
 kubectl exec -i $(kubectl get pods | grep "mysql*" | grep -v pause| awk '{print $1}') -- sh /var/lib/sc.sh
 kubectl exec -i $(kubectl get pods | grep "influxdb" | grep -v pause| awk '{print $1}') -- sh /create.sh
-kubectl exec -i $(kubectl get pods | grep "influxdb" | grep -v pause| awk '{print $1}') -- sh /create1.sh
+# kubectl exec -i $(kubectl get pods | grep "influxdb" | grep -v pause| awk '{print $1}') -- sh /create1.sh

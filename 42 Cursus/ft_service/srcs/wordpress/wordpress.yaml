@@ -5,6 +5,7 @@ metadata :
     labels:
         app: wdp
 spec:
+    replicas: 1
     selector:
         matchLabels:
            app: wdp

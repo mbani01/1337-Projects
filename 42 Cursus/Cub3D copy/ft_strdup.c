@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 23:09:16 by mbani             #+#    #+#             */
-/*   Updated: 2019/12/29 17:54:28 by mbani            ###   ########.fr       */
+/*   Updated: 2020/01/19 21:21:38 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static	char	*ft_strcpy(char *dest, const char *src)
 	i = 0;
 	while (src[i] != '\0')
 	{
-		if(src[i] != ' ')
+		if (src[i] != ' ')
 			dest[j++] = src[i];
 		i++;
 	}
