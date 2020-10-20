@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/10/19 11:52:04 by mbani            ###   ########.fr       */
+/*   Updated: 2020/10/20 16:37:13 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	env_spliter(char *env, char **key, char **value)
 	if (env)
 		while (env[i])
 		{
-			if(env[i] == '=')
+			if (env[i] == '=')
 			{
 				env[i] = '\0';
 				*key = ft_strdup(env);
@@ -30,7 +30,7 @@ int	env_spliter(char *env, char **key, char **value)
 			}
 			i++;
 		}
-	return(0);
+	return (0);
 }
 
 void	env_var(char **envp)
@@ -43,7 +43,7 @@ void	env_var(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if(envp[i])
+		if (envp[i])
 			env_spliter(envp[i], &key, &value);
 		i++;
 		new = ft_lstnewenv(key, value);
@@ -79,51 +79,99 @@ void	quote_check(enum e_quotes *sngl, enum e_quotes *dbl, char *line, int i)
 {
 	if (line[i] == '\'' && *sngl != 1 && line[i - 1] != '\\')
 		*sngl = opened;
-	if (line[i] == '\'' && *sngl == 1 && line[i - 1] != '\\')
+	else if (line[i] == '\'' && *sngl == 1 && line[i - 1] != '\\')
 		*sngl = 2;
 	if (line[i] == '\"' && *dbl != 1 && line[i - 1] != '\\')
 		*dbl = 1;
-	if (line[i] == '\"' && *dbl == 1 && line[i - 1] != '\\')
+	else if (line[i] == '\"' && *dbl == 1 && line[i - 1] != '\\')
 		*dbl = 2;
 }
 
-void	add_string(char *tmp, int i, char *line)
+int		add_string(char *line)
 {
 	t_cmd *new;
+	int i;
+	char *tmp;
 
-	while (tmp[i] != ' ' && tmp[i] != '\t')
-		i++;
-	tmp[i] = '\0';
+	i = 0;
+	tmp = ft_strdup(line);
+	while(tmp[i++])
+	{
+		if (tmp[i] == ' ' || tmp[i] == '\t')
+		{
+			tmp[i] = '\0';
+			break ;
+		}
+	}
 	new = ft_lstnew_cmd(tmp);
 	ft_lstadd_backcmd(&g_cmd_head, new);
-	line +=i;
+	i = ft_strlen(tmp);
+	free(tmp);
+	return i;
+}
+
+int quoted_str(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
+{
+	int i;
+	char *tmp;
+	t_cmd *new;
+
+	i = 0;
+	tmp = ft_strdup(line);
+	while (line[++i])
+	{
+		quote_check(sngl, dbl, line, i);
+		if ((*sngl == 2 && *dbl != 1)|| (*dbl == 2 && *sngl != 1))
+		{
+			if(tmp[i+1] == ' ' || tmp[i + 1] == '\t')
+			{
+				tmp[i + 1] = '\0';
+				break ;
+			}
+			else
+				continue ;
+		}
+	}
+	new = ft_lstnew_cmd(tmp);
+	ft_lstadd_backcmd(&g_cmd_head, new);
+	free(tmp);
+	*sngl = 0;
+	*dbl = 0;
+	return i+1;
 }
 
 void line_split(char *line)
 {
-	char *tmp;
 	int i;
 	enum e_quotes sngl;
 	enum e_quotes dbl;
 
-	tmp = ft_strdup(line);
 	i = 0;
 	sngl = 0;
 	dbl = 0;
 	while (line[i])
 	{
-		if (line[i] == '\'' || line[i] == '\"')
-			quote_check(&sngl, &dbl, line, i);
-		if (line[i] == '\\' && sngl != 1)
-			i += 2;
-		while ((line[i] == ' ' || line[i] == '\t') && sngl !=
-		1 && dbl != 1 && line[i - 1] != '\\')
+		while(line[i] == ' ' || line[i] == '\t')
 			i++;
-		add_string(tmp, i, line);
-		// i++;
+		quote_check(&sngl, &dbl, line, i);
+		if (sngl == 1 || dbl == 1)
+		{
+			i += quoted_str(line + i, &sngl, &dbl);
+		}
+		else
+		{
+			i += add_string(line + i);
+		}
 	}
-	free(tmp);
-	// ft_printf("hello");
+	t_cmd *tmp = g_cmd_head;
+	while(tmp->next)
+	{
+		ft_putstr_fd(tmp->string, 1);
+		ft_putchar_fd('\n', 1);
+		tmp = tmp->next;
+	}
+	ft_putstr_fd(tmp->string, 1);
+	ft_putchar_fd('\n', 1);
 }
 
 void	line_parser(char *line)
