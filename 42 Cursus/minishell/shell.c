@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/10/27 12:26:19 by mbani            ###   ########.fr       */
+/*   Updated: 2020/11/02 10:45:12 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,6 @@ void	env_var(char **envp)
 	}
 }
 
-char	*rm_spaces(char *line)
-{
-	int		i;
-	int		len;
-	char	*tmp;
-
-	i = 0;
-	while (line[i] == ' ' || line[i] == '\t')
-		i++;
-	line += i;
-	len = ft_strlen(line) - 1;
-	i = len;
-	/* 
-	if ((line[len] == ' ' || line[len] == '\t') && line[len - 1] != '\\')
-	// {
-	// 	while ((line[i] == ' ' || line[i] == '\t') && line[i - 1]  != '\\')
-	// 		i--;
-	// 		line[len- (len - i) + 1] = '\0';
-	// 	return (line);
-	// }   remove end line spaces needed to check special characters before space
-	*/ 
-	return (line);
-}
-
 int		not_escaped(char *line, int i)
 {
 	int res;
@@ -88,6 +64,21 @@ int		not_escaped(char *line, int i)
 		return 1;
 	else
 		return 0;
+}
+
+char	*rm_spaces(char *line)
+{
+	int		i;
+	int		len;
+	char	*tmp;
+
+	i = 0;
+	while (line[i] == ' ' || line[i] == '\t')
+		i++;
+	line += i;
+	len = ft_strlen(line) - 1;
+	i = len;
+	return (line);
 }
 
 void	quote_check(enum e_quotes *sngl, enum e_quotes *dbl, char *line, int i)
@@ -129,43 +120,92 @@ int quoted_str(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
 				break ;
 		}
 	}
-	// new = ft_lstnew_cmd(tmp);
-	// ft_lstadd_backcmd(&g_cmd_head, new);
-	// free(tmp);
 	*sngl = 0;
 	*dbl = 0;
-	return i + 1;
+	free(tmp);
+	return (i + 1);
+}
+
+void add_to_list(char **tmp)
+{
+	t_cmd	*new;
+
+	new = ft_lstnew_cmd(*tmp);
+	ft_lstadd_backcmd(&g_cmd_head, new);
+	free(*tmp);
+}
+int	operators(char **line, int i)
+{
+	char *op;
+	char *tmp;
+	int j;
+
+	j = 0;
+	op = malloc(2);
+	tmp = ft_strdup(*line);
+	if (tmp[i + 1] == '>' && tmp[i + 2] == '>')
+	{
+		tmp[i + 1] = '\0';
+		tmp[i + 2] = '\0';
+		op[0] = '>';
+		op[1] = '>';
+		j += 3;
+	}
+	else
+	{
+		op[0] = tmp[i + 1];
+		op[1] = '\0';
+		tmp[i + 1] = '\0';
+		j += 2;
+	}
+	free(*line);
+	*line = ft_strdup(&tmp[i + j]);
+	add_to_list(&tmp);
+	add_to_list(&op);
+	return i + j;
 }
 
 int		add_string(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
 {
-	t_cmd	*new;
 	int		i;
 	char	*tmp;
+	int 	j;
 
 	i = 0;
+	j = 0;
 	tmp = ft_strdup(line);
 	while (tmp[i])
 	{
 		quote_check(sngl, dbl, tmp, i);
 		if (*sngl == 1 || *dbl == 1)
 		{
+			j = 0;
 			i += quoted_str(tmp + i, sngl, dbl);
 		}
-		if (tmp[i] == ' ' || tmp[i] == '\t')
+		if ((tmp[i] == ';' || tmp[i] == '|' || tmp[i] == '<' || tmp[i] == '>') && not_escaped(tmp, i))
+			{
+				i += operators(&tmp, i - 1);
+				j += i;
+				i = 0;
+				continue;
+			}
+		if ((tmp[i] == ' ' || tmp[i] == '\t'))
 		{
+			j = 0;
+			if (!not_escaped(tmp, i))
+			{
+				i++;
+				continue;
+			}
 			tmp[i] = '\0';
 			break ;
 		}
 		i++;
 	}
-	new = ft_lstnew_cmd(tmp);
-	ft_lstadd_backcmd(&g_cmd_head, new);
 	i = ft_strlen(tmp);
-	free(tmp);
-	return (i);
+	add_to_list(&tmp);
+	return (i + j);
 }
-
 
 void	line_split(char *line)
 {
@@ -180,15 +220,8 @@ void	line_split(char *line)
 	{
 		while (line[i] == ' ' || line[i] == '\t')
 			i++;
-		// quote_check(&sngl, &dbl, line, i);
-		// if (sngl == 1 || dbl == 1)
-		// {
-		// 	i += quoted_str(line + i, &sngl, &dbl);
-		// }
-		// else
-		// {
+		if (line[i])
 			i += add_string(line + i, &sngl, &dbl);
-		// }
 	}
 	t_cmd *tmp = g_cmd_head;
 	while (tmp->next)
@@ -208,8 +241,6 @@ void	line_parser(char *line)
 	line_split(line);
 	if (g_cmd_head)
 	ft_lstclearcmd(&g_cmd_head);
-	// ft_putstr_fd(line, 1);
-	// ft_putchar_fd('\n', 1);
 }
 
 int		main(int argc, char  **argv, char **envp)
@@ -227,6 +258,7 @@ int		main(int argc, char  **argv, char **envp)
 		line_parser(line);
 		free(line);
 	}
+	free(line);
 	ft_lstclearenv(&g_env_head);/* free env var  */
 	return (0);
 }
