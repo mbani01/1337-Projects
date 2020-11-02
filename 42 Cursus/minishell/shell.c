@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/11/02 10:45:12 by mbani            ###   ########.fr       */
+/*   Updated: 2020/11/02 19:16:45 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,77 +134,75 @@ void add_to_list(char **tmp)
 	ft_lstadd_backcmd(&g_cmd_head, new);
 	free(*tmp);
 }
-int	operators(char **line, int i)
+int	operators(char **line, int i, char **op)
 {
-	char *op;
-	char *tmp;
+
 	int j;
 
 	j = 0;
-	op = malloc(2);
-	tmp = ft_strdup(*line);
-	if (tmp[i + 1] == '>' && tmp[i + 2] == '>')
+	op[0] = malloc(2);
+	if (line[0][i] == '>' && line[0][i + 1] == '>')
 	{
-		tmp[i + 1] = '\0';
-		tmp[i + 2] = '\0';
-		op[0] = '>';
-		op[1] = '>';
-		j += 3;
+		line[0][i] = '\0';
+		line[0][i + 1] = '\0';
+		op[0][0] = '>';
+		op[0][1] = '>';
+		j = 2;
 	}
 	else
 	{
-		op[0] = tmp[i + 1];
-		op[1] = '\0';
-		tmp[i + 1] = '\0';
-		j += 2;
+		op[0][0] = line[0][i];
+		op[0][1] = '\0';
+		line[0][i] = '\0';
+		j = 1;
 	}
-	free(*line);
-	*line = ft_strdup(&tmp[i + j]);
-	add_to_list(&tmp);
-	add_to_list(&op);
-	return i + j;
+	return j;
 }
 
 int		add_string(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
 {
 	int		i;
 	char	*tmp;
-	int 	j;
+	char	*op;
+	int j;
 
 	i = 0;
-	j = 0;
 	tmp = ft_strdup(line);
 	while (tmp[i])
 	{
+		j = 0;
 		quote_check(sngl, dbl, tmp, i);
 		if (*sngl == 1 || *dbl == 1)
 		{
-			j = 0;
 			i += quoted_str(tmp + i, sngl, dbl);
 		}
-		if ((tmp[i] == ';' || tmp[i] == '|' || tmp[i] == '<' || tmp[i] == '>') && not_escaped(tmp, i))
-			{
-				i += operators(&tmp, i - 1);
-				j += i;
-				i = 0;
-				continue;
-			}
-		if ((tmp[i] == ' ' || tmp[i] == '\t'))
+		if ((tmp[i] == ' ' || tmp[i] == '\t') || ((tmp[i] == ';' ||
+		tmp[i] == '|' || tmp[i] == '<' ||
+		tmp[i] == '>') && not_escaped(tmp, i)))
 		{
-			j = 0;
-			if (!not_escaped(tmp, i))
+			if ((tmp[i] == ' ' || tmp[i] == '\t') && !not_escaped(tmp, i))
 			{
 				i++;
 				continue;
 			}
-			tmp[i] = '\0';
-			break ;
+			if ((tmp[i] == ' ' || tmp[i] == '\t') && not_escaped(tmp, i))
+			{
+				tmp[i] = '\0';
+				break ;
+			}
+			else
+			{
+				i += operators(&tmp, i, &op);
+				j = 1;
+				break;
+			}
 		}
 		i++;
 	}
-	i = ft_strlen(tmp);
 	add_to_list(&tmp);
-	return (i + j);
+	if (j == 1)
+		add_to_list(&op);
+	return (i);
 }
 
 void	line_split(char *line)
