@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/11/02 19:16:45 by mbani            ###   ########.fr       */
+/*   Updated: 2020/11/03 18:47:14 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,11 @@ void	quote_check(enum e_quotes *sngl, enum e_quotes *dbl, char *line, int i)
 {
 	if (i == 0 || line[i - 1])
 	{
-		if (line[i] == '\'' && *sngl != 1 && not_escaped(line, i))
+		if (line[i] == '\'' && *sngl != 1 && *dbl != 1 && not_escaped(line, i))
 			*sngl = opened;
 		else if (line[i] == '\'' && *sngl == 1)
 			*sngl = closed;
-		if (line[i] == '\"' && *dbl != 1 && not_escaped(line, i) && *sngl != 1)
+		if (line[i] == '\"' && *dbl != 1 && *sngl != 1 && not_escaped(line, i))
 			*dbl = opened;
 		else if (line[i] == '\"' && *dbl == 1 && not_escaped(line, i))
 			*dbl = closed;
@@ -109,7 +109,8 @@ int quoted_str(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
 		quote_check(sngl, dbl, line, i);
 		if ((*sngl == 2 && *dbl != 1) || (*dbl == 2 && *sngl != 1))
 		{
-			if (tmp[i + 1] && (tmp[i + 1] == ' ' || tmp[i + 1] == '\t'))
+			if ((tmp[i + 1] && (tmp[i + 1] == ' ' || tmp[i + 1] == '\t')) || ((tmp[i + 1] == ';' ||
+		tmp[i + 1] == '|' || tmp[i + 1] == '<' || tmp[i + 1] == '>')))
 			{
 				tmp[i + 1] = '\0';
 				break ;
@@ -123,7 +124,10 @@ int quoted_str(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
 	*sngl = 0;
 	*dbl = 0;
 	free(tmp);
-	return (i + 1);
+	if (tmp[i + 1])
+		return (i + 1);
+	else
+		return (i);
 }
 
 void add_to_list(char **tmp)
@@ -133,6 +137,7 @@ void add_to_list(char **tmp)
 	new = ft_lstnew_cmd(*tmp);
 	ft_lstadd_backcmd(&g_cmd_head, new);
 	free(*tmp);
+	*tmp = NULL;
 }
 int	operators(char **line, int i, char **op)
 {
@@ -140,13 +145,14 @@ int	operators(char **line, int i, char **op)
 	int j;
 
 	j = 0;
-	op[0] = malloc(2);
+	op[0] = malloc(3);
 	if (line[0][i] == '>' && line[0][i + 1] == '>')
 	{
 		line[0][i] = '\0';
 		line[0][i + 1] = '\0';
 		op[0][0] = '>';
 		op[0][1] = '>';
+		op[0][2] = '\0';
 		j = 2;
 	}
 	else
@@ -185,23 +191,24 @@ int		add_string(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
 				i++;
 				continue;
 			}
-			if ((tmp[i] == ' ' || tmp[i] == '\t') && not_escaped(tmp, i))
-			{
-				tmp[i] = '\0';
-				break ;
-			}
-			else
+			if (((tmp[i] == ';' ||
+		tmp[i] == '|' || tmp[i] == '<' ||
+		tmp[i] == '>') && not_escaped(tmp, i)))
 			{
 				i += operators(&tmp, i, &op);
 				j = 1;
-				break;
+				break ;
 			}
+			tmp[i] = '\0';
+			break ;
 		}
 		i++;
 	}
-	add_to_list(&tmp);
-	if (j == 1)
+	if (*tmp)
+		add_to_list(&tmp);
+	if (j == 1 && *op)
 		add_to_list(&op);
+	j = 0;
 	return (i);
 }
 
