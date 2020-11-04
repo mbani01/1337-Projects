@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/11/03 18:47:14 by mbani            ###   ########.fr       */
+/*   Updated: 2020/11/04 17:34:59 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,43 @@ int	operators(char **line, int i, char **op)
 		line[0][i] = '\0';
 		j = 1;
 	}
-	return j;
+	return (j);
+}
+
+int		separators_check(char **tmp, int *i, char **op, int *j)
+{
+	if ((tmp[0][*i] == ' ' || tmp[0][*i] == '\t') || ((tmp[0][*i] == ';' ||
+		tmp[0][*i] == '|' || tmp[0][*i] == '<' ||
+		tmp[0][*i] == '>') && not_escaped(tmp[0], *i)))
+	{
+		if ((tmp[0][*i] == ' ' || tmp[0][*i] == '\t')
+			&& !not_escaped(tmp[0], *i))
+		{
+			*i += 1;
+			return (1);
+		}
+		if (((tmp[0][*i] == ';' ||
+		tmp[0][*i] == '|' || tmp[0][*i] == '<' ||
+		tmp[0][*i] == '>') && not_escaped(tmp[0], *i)))
+		{
+			*i += operators(&tmp[0], *i, &op[0]);
+			*j = 1;
+			return (0);
+		}
+		tmp[0][*i] = '\0';
+		return (0);
+	}
+	return (10);
+}
+
+int		add_to_list_bulk(char **tmp, char **op, int *i, int *j)
+{
+	if (*tmp[0])
+		add_to_list(tmp);
+	if (*j == 1 && *op[0])
+		add_to_list(op);
+	*j = 0;
+	return (*i);
 }
 
 int		add_string(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
@@ -170,7 +206,8 @@ int		add_string(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
 	int		i;
 	char	*tmp;
 	char	*op;
-	int j;
+	int		j;
+	int		sep;
 
 	i = 0;
 	tmp = ft_strdup(line);
@@ -179,44 +216,22 @@ int		add_string(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
 		j = 0;
 		quote_check(sngl, dbl, tmp, i);
 		if (*sngl == 1 || *dbl == 1)
-		{
 			i += quoted_str(tmp + i, sngl, dbl);
-		}
-		if ((tmp[i] == ' ' || tmp[i] == '\t') || ((tmp[i] == ';' ||
-		tmp[i] == '|' || tmp[i] == '<' ||
-		tmp[i] == '>') && not_escaped(tmp, i)))
-		{
-			if ((tmp[i] == ' ' || tmp[i] == '\t') && !not_escaped(tmp, i))
-			{
-				i++;
-				continue;
-			}
-			if (((tmp[i] == ';' ||
-		tmp[i] == '|' || tmp[i] == '<' ||
-		tmp[i] == '>') && not_escaped(tmp, i)))
-			{
-				i += operators(&tmp, i, &op);
-				j = 1;
-				break ;
-			}
-			tmp[i] = '\0';
+		sep = separators_check(&tmp, &i, &op, &j);
+		if (sep == 1)
+			continue;
+		else if (sep == 0)
 			break ;
-		}
 		i++;
 	}
-	if (*tmp)
-		add_to_list(&tmp);
-	if (j == 1 && *op)
-		add_to_list(&op);
-	j = 0;
-	return (i);
+	return (add_to_list_bulk(&tmp, &op, &i, &j));
 }
 
 void	line_split(char *line)
 {
-	int i;
 	enum e_quotes sngl;
 	enum e_quotes dbl;
+	int		i;
 
 	i = 0;
 	sngl = 0;
