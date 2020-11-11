@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/11 20:12:47 by mbani             #+#    #+#             */
-/*   Updated: 2020/10/18 18:45:48 by mbani            ###   ########.fr       */
+/*   Updated: 2020/11/06 12:00:36 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,19 @@ void	ft_lstclearenv(t_env **lst)
 		*lst = tmp;
 	}
 }
+void	ft_lstclearcmd(t_cmd **lst)
+{
+	t_cmd *tmp;
 
-t_cmd	*ft_lstnew_cmd(char *string)
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		free((*lst)->string);
+		free(*lst);
+		*lst = tmp;
+	}
+}
+t_cmd	*ft_lstnew_cmd(char *string, enum e_type t)
 {
 	t_cmd *ptr;
 
@@ -65,6 +76,7 @@ t_cmd	*ft_lstnew_cmd(char *string)
 	if (!ptr)
 		return (NULL);
 	ptr->string = ft_strdup(string);
+	ptr->type = t;
 	ptr->next = NULL;
 	return (ptr);
 }
