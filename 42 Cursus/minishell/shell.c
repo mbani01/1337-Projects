@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/11/10 17:21:35 by mbani            ###   ########.fr       */
+/*   Updated: 2020/11/11 12:50:02 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -404,7 +404,6 @@ void	dolar_check(char **str)
 
 	expan.sng = 0;
 	expan.dbl = 0;
-	expan.tp = 0;
 	i = 0;
 	j = 0;
 	while (str[0][i])
@@ -433,15 +432,65 @@ void	dolar_check(char **str)
 	}
 }
 
+void	add_to_str(char **tmp, char c)
+{
+	char *temp;
+
+	temp = ft_strdup(*tmp);
+	free(*tmp);
+	tmp[0] = ft_calloc(ft_strlen(temp) + 1, ft_strlen(temp) + 1);
+	ft_strlcpy(tmp[0], temp, ft_strlen(temp));
+	ft_strlcat(tmp[0], &c, 1);
+}
+
+void	quote_removal(char **str)
+{
+	t_expan quote;
+	int		i;
+	char	*tmp;
+	char	*temp;
+
+	i = 0;
+	quote.sng = 0;
+	quote.dbl = 0;
+	tmp = ft_calloc(1, 1);
+	temp = ft_calloc(1, 1);
+	while (str[0][i])
+	{
+		temp[0] = str[0][i];
+		quote_check(&quote.sng, &quote.dbl, str[0], i);
+		if (str[0][i] == '\\' && quote.sng != 1)
+		{
+			tmp = ft_strjoin(tmp, temp);
+			i += 1;
+		}
+		else if (str[0][i] == '\'' && quote.dbl != 1)
+		{
+			i++;
+			continue ;
+		}
+		else if (str[0][i] == '\"' && quote.sng != 1)
+		{
+			i++;
+			continue ;
+		}
+		else
+			tmp = ft_strjoin(tmp, temp);
+		i++;
+	}
+	printf("%s\n", tmp);
+}
+
 void	param_expansion(t_cmd *tmp)
 {
 	while (tmp->next)
 	{
 		dolar_check(&(tmp->string));
 		tmp = tmp->next;
-		quote_removal()
+		quote_removal(&(tmp->string));
 	}
 	dolar_check(&(tmp->string));
+	quote_removal(&(tmp->string));
 }
 
 void	line_parser(char *line)
@@ -451,20 +500,19 @@ void	line_parser(char *line)
 	line_split(line);
 	if (line[0])
 	param_expansion(g_cmd_head);
-	t_cmd *tmp = g_cmd_head;
-	while (tmp->next)
-	{
-		ft_putstr_fd(tmp->string, 1);
-		// ft_putstr_fd(" : ", 1);
-		// ft_putnbr_fd(tmp->type, 1);
-		ft_putchar_fd('\n', 1);
-		tmp = tmp->next;
-		
-	}
-	ft_putstr_fd(tmp->string, 1);
-	// ft_putstr_fd(" : ", 1);
-	// ft_putnbr_fd(tmp->type, 1);
-	ft_putchar_fd('\n', 1);
+	// t_cmd *tmp = g_cmd_head;
+	// while (tmp->next)
+	// {
+	// 	ft_putstr_fd(tmp->string, 1);
+	// 	// ft_putstr_fd(" : ", 1);
+	// 	// ft_putnbr_fd(tmp->type, 1);
+	// 	ft_putchar_fd('\n', 1);
+	// 	tmp = tmp->next;
+	// }
+	// ft_putstr_fd(tmp->string, 1);
+	// // ft_putstr_fd(" : ", 1);
+	// // ft_putnbr_fd(tmp->type, 1);
+	// ft_putchar_fd('\n', 1);
 	if (g_cmd_head)
 	ft_lstclearcmd(&g_cmd_head);
 }
