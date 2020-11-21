@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/11/11 12:50:02 by mbani            ###   ########.fr       */
+/*   Updated: 2020/11/18 17:10:27 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ int		not_escaped(char *line, int i)
 
 	res = 0;
 	if (i)
-	while (line[i] && line[i - 1] && line[--i] == '\\')
-	{
-		res++;
-	}
+		while (line[i] && line[i - 1] && line[--i] == '\\')
+		{
+			res++;
+		}
 	if (res % 2 == 0 || res == 0)
 		return (1);
 	else
@@ -70,7 +70,6 @@ char	*rm_spaces(char *line)
 {
 	int		i;
 	int		len;
-	char	*tmp;
 
 	i = 0;
 	while (line[i] == ' ' || line[i] == '\t')
@@ -112,7 +111,6 @@ int		quoted_str(char *line, enum e_quotes *sngl, enum e_quotes *dbl)
 {
 	int		i;
 	char	*tmp;
-	t_cmd	*new;
 
 	i = 0;
 	tmp = ft_strdup(line);
@@ -213,15 +211,18 @@ enum	e_type	operators_check(char *op)
 	return (arg);
 }
 
+static	int g_x;
+
 int		add_to_list_bulk(char **tmp, char **op, int *i, int *j)
 {
-	static	int x;
 	enum e_type t;
 
-	if (x == 0)
+	if (g_x == 0 || g_x == -100020)
 		t = cmd;
 	else
 		t = arg;
+	if (g_x == 0 && !*tmp[0] && (op[0][0] == '<' || op[0][0] == '>'))
+		g_x = -100000;
 	if (*tmp[0])
 		add_to_list(tmp, t);
 	if (*j == 1 && *op[0])
@@ -232,9 +233,9 @@ int		add_to_list_bulk(char **tmp, char **op, int *i, int *j)
 		*tmp = NULL;
 	}
 	if (t == pipee || t == semicolumn)
-		x = 0;
+		g_x = 0;
 	else
-		x = -1;
+		g_x -= 10;
 	*j = 0;
 	return (*i);
 }
@@ -302,6 +303,29 @@ void	line_split(char *line)
 
 // }
 
+void	cp_before_$(int *k, int len, char **tmp, char **str)
+{
+	while (*k < len)
+	{
+		tmp[0][*k] = str[0][*k];
+		*k += 1;
+	}
+}
+
+void	cp_from_$(int *k, char **tmp, char **env, int *x)
+{
+	int len;
+
+	len = ft_strlen(env[0]);
+	while (len > 0)
+	{
+		tmp[0][*k] = env[0][*x];
+		*k += 1;
+		*x += 1;
+		len--;
+	}
+}
+
 void replace(char **str, char *env, int j, int i)
 {
 	char *tmp;
@@ -314,30 +338,17 @@ void replace(char **str, char *env, int j, int i)
 	len = ft_strlen(env) + (ft_strlen(str[0]) - (j + 1));
 	tmp = ft_calloc(len + 1, len + 1);
 	tmp[len] = '\0';
-		while (k < (i - j))
-		{
-			tmp[k] = str[0][k];
-			k++;
-		}
-		len = ft_strlen(env);
-		while (len > 0)
-		{
-			tmp[k] = env[x];
-			k++;
-			x++;
-			len--;
-		}
+	cp_before_$(&k, (i - j), &tmp, str);
+	cp_from_$(&k, &tmp, &env, &x);
+	i++;
+	while (str[0][i])
+	{
+		tmp[k] = str[0][i];
+		k++;
 		i++;
-		while (str[0][i])
-		{
-			tmp[k] = str[0][i];
-			k++;
-			i++;
-		}
+	}
 	free(str[0]);
 	str[0] = tmp;
-	// ft_putchar_fd('\n', 1);
-	// free(tmp);
 }
 
 int	ft_strncmp_env(const char *s1, const char *s2, size_t n)
@@ -368,7 +379,6 @@ int	search_and_replace(char **str, int i, int j)
 		if ((ft_strncmp_env(&str[0][i - j + 1], tmp->key, j)) == 0)
 		{
 			replace(str, tmp->value, j, i);
-			// break ;
 			return (1);
 		}
 		tmp = tmp->next;
@@ -443,6 +453,37 @@ void	add_to_str(char **tmp, char c)
 	ft_strlcat(tmp[0], &c, 1);
 }
 
+void	quote_removal_init(t_expan *quote, char **tmp, char **temp, int *i)
+{
+	*i = 0;
+	quote->sng = 0;
+	quote->dbl = 0;
+	if (!(tmp[0] = ft_calloc(1, 1)))
+		exit(1);
+	if (!(temp[0] = ft_calloc(1, 1)))
+		exit(1);
+}
+
+void	rm_backslash(char **temp, char **str, char **tmp, int *i)
+{
+	char *tmp1;
+
+	temp[0][0] = str[0][*i + 1];
+	tmp1 = tmp[0];
+	tmp[0] = ft_strjoin(tmp[0], temp[0]);
+	free(tmp1);
+	*i += 1;
+}
+
+void	join(char **temp, char **tmp)
+{
+	char *tmp1;
+
+	tmp1 = tmp[0];
+	tmp[0] = ft_strjoin(tmp[0], temp[0]);
+	free(tmp1);
+}
+
 void	quote_removal(char **str)
 {
 	t_expan quote;
@@ -450,35 +491,26 @@ void	quote_removal(char **str)
 	char	*tmp;
 	char	*temp;
 
-	i = 0;
-	quote.sng = 0;
-	quote.dbl = 0;
-	tmp = ft_calloc(1, 1);
-	temp = ft_calloc(1, 1);
+	quote_removal_init(&quote, &tmp, &temp, &i);
 	while (str[0][i])
 	{
 		temp[0] = str[0][i];
 		quote_check(&quote.sng, &quote.dbl, str[0], i);
 		if (str[0][i] == '\\' && quote.sng != 1)
-		{
-			tmp = ft_strjoin(tmp, temp);
-			i += 1;
-		}
-		else if (str[0][i] == '\'' && quote.dbl != 1)
-		{
-			i++;
-			continue ;
-		}
-		else if (str[0][i] == '\"' && quote.sng != 1)
+			rm_backslash(&temp, str, &tmp, &i);
+		else if ((str[0][i] == '\'' && quote.dbl != 1)
+		|| (str[0][i] == '\"' && quote.sng != 1))
 		{
 			i++;
 			continue ;
 		}
 		else
-			tmp = ft_strjoin(tmp, temp);
+			join(&temp, &tmp);
 		i++;
 	}
-	printf("%s\n", tmp);
+	free(str[0]);
+	str[0] = tmp;
+	free(temp);
 }
 
 void	param_expansion(t_cmd *tmp)
@@ -486,8 +518,8 @@ void	param_expansion(t_cmd *tmp)
 	while (tmp->next)
 	{
 		dolar_check(&(tmp->string));
-		tmp = tmp->next;
 		quote_removal(&(tmp->string));
+		tmp = tmp->next;
 	}
 	dolar_check(&(tmp->string));
 	quote_removal(&(tmp->string));
@@ -496,23 +528,24 @@ void	param_expansion(t_cmd *tmp)
 void	line_parser(char *line)
 {
 	g_cmd_head = NULL;
+	g_x = 0;
 	line = rm_spaces(line);
 	line_split(line);
 	if (line[0])
 	param_expansion(g_cmd_head);
-	// t_cmd *tmp = g_cmd_head;
-	// while (tmp->next)
-	// {
-	// 	ft_putstr_fd(tmp->string, 1);
-	// 	// ft_putstr_fd(" : ", 1);
-	// 	// ft_putnbr_fd(tmp->type, 1);
-	// 	ft_putchar_fd('\n', 1);
-	// 	tmp = tmp->next;
-	// }
-	// ft_putstr_fd(tmp->string, 1);
-	// // ft_putstr_fd(" : ", 1);
-	// // ft_putnbr_fd(tmp->type, 1);
-	// ft_putchar_fd('\n', 1);
+	t_cmd *tmp = g_cmd_head;
+	while (tmp->next)
+	{
+		ft_putstr_fd(tmp->string, 1);
+		ft_putstr_fd(" : ", 1);
+		ft_putnbr_fd(tmp->type, 1);
+		ft_putchar_fd('\n', 1);
+		tmp = tmp->next;
+	}
+	ft_putstr_fd(tmp->string, 1);
+	ft_putstr_fd(" : ", 1);
+	ft_putnbr_fd(tmp->type, 1);
+	ft_putchar_fd('\n', 1);
 	if (g_cmd_head)
 	ft_lstclearcmd(&g_cmd_head);
 }
@@ -522,6 +555,8 @@ int		main(int argc, char  **argv, char **envp)
 	int ret;
 	char *line;
 
+	(void) argc;
+	(void) argv;
 	env_var(envp);
 	while (1)
 	{
