@@ -3,33 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/11 21:42:00 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/21 13:07:50 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/11 20:59:41 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/21 13:08:22 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
+
+void	ft_bzer(void *s, register size_t n)
+{
+	while (n--)
+	{
+		*(char *)s++ = 0;
+	}
+}
 
 void	*ft_calloc(size_t count, size_t size)
 {
 	register void	*ptr;
-	register size_t	i;
-	register int	j;
 
-	j = 0;
-	i = (count * size);
 	ptr = malloc(count * size);
-	if (ptr)
-		while (i-- > 0)
-		{
-			*(unsigned char *)ptr = 0;
-			if (i != 0)
-			{
-				ptr++;
-				j++;
-			}
-		}
-	return (ptr - j);
+	if (!ptr)
+		return (ptr);
+	ft_bzer(ptr, count * size);
+	return (ptr);
 }

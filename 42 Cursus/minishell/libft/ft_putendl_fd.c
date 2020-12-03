@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/13 18:54:57 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/20 16:50:34 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/14 12:01:11 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/20 16:57:32 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
-static	void	ft_priint(char c, int fd)
+static	void	ft_print(char c, int fd)
 {
 	write(fd, &c, 1);
 }
@@ -20,10 +20,12 @@ static	void	ft_priint(char c, int fd)
 void			ft_putendl_fd(char *s, int fd)
 {
 	if (s)
+	{
 		while (*s != '\0')
 		{
-			ft_priint(*s, fd);
+			ft_print(*s, fd);
 			s++;
 		}
-	ft_priint('\n', fd);
+		write(fd, "\n", 1);
+	}
 }

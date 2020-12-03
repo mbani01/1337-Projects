@@ -3,27 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/10 17:02:22 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/22 12:31:14 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/10 18:32:13 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/22 12:24:18 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+int		ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	const unsigned char	*c1;
-	const unsigned char	*c2;
-	size_t				i;
+	unsigned char	*str;
+	unsigned char	*ptr;
+	size_t			j;
 
 	if (n == 0)
 		return (0);
-	c1 = (unsigned char*)s1;
-	c2 = (unsigned char *)s2;
-	i = 0;
-	while (c1[i] && c2[i] && c1[i] == c2[i] && n - 1 > i)
-		i++;
-	return (c1[i] - c2[i]);
+	str = (unsigned char *)s1;
+	ptr = (unsigned char *)s2;
+	j = 0;
+	while (str[j] && ptr[j] && (str[j] == ptr[j]) && n - 1 > j)
+		j++;
+	return (str[j] - ptr[j]);
 }

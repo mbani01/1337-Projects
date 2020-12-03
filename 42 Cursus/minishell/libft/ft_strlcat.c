@@ -3,37 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/11 11:12:40 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/22 22:19:12 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/11 11:05:43 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/22 11:49:42 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	size_t lend;
-	size_t lens;
-	size_t j;
+	size_t	srclen;
+	size_t	dstlen;
+	size_t	i;
 
-	j = 0;
-	lens = 0;
+	i = 0;
+	srclen = 0;
+	dstlen = 0;
 	if (dst || !src)
 	{
-		lend = ft_strlen(dst);
-		lens = ft_strlen(src);
-		j = lend;
-		if (size <= lend)
-			return (lens + size);
+		dstlen = ft_strlen(dst);
+		srclen = ft_strlen(src);
+		if (size <= dstlen)
+			return (srclen + size);
 		else
 		{
-			while (size - 1 > lend && *src)
-				dst[lend++] = *src++;
-			dst[lend] = '\0';
+			i = dstlen;
+			while (size - 1 > dstlen && *src)
+			{
+				dst[dstlen++] = *src;
+				src++;
+			}
+			dst[dstlen] = '\0';
 		}
 	}
-	return (j + lens);
+	return (i + srclen);
 }

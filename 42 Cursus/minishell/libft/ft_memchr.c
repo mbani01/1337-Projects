@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/09 22:10:39 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/22 14:49:03 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/09 21:49:54 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/22 12:25:53 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
+#include "libft.h"
 
 void	*ft_memchr(const void *s, int c, size_t n)
 {
@@ -19,7 +19,7 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	ptr = (unsigned char *)s;
 	while (n > 0)
 	{
-		if (*(unsigned char *)ptr == (unsigned char)c)
+		if (*ptr == (unsigned char)c)
 			return (ptr);
 		ptr++;
 		n--;

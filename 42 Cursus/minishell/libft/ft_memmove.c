@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/09 19:55:21 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/21 22:17:39 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/09 20:04:07 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/21 13:09:49 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
-static	void	*ftt_memcpy(void *dst, const void *src, size_t n)
+void	*ft_mmcpy(void *dst, const void *src, size_t n)
 {
-	size_t i;
+	size_t save;
 
-	i = n;
+	save = n;
 	if (*(char *)dst == '\0' && *(char *)src == '\0')
 		return (dst);
 	while (n > 0)
@@ -26,24 +26,25 @@ static	void	*ftt_memcpy(void *dst, const void *src, size_t n)
 		src++;
 		n--;
 	}
-	return (dst - i);
+	return (dst - save);
 }
 
-void			*ft_memmove(void *dst, const void *src, size_t len)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
 	if (dst == src)
 		return (dst);
-	if (len == 0 || (dst == NULL && src == NULL))
+	if (len == 0 || ((char *)dst == NULL && (char *)src == NULL))
 		return (dst);
 	if (dst < src)
-		return (ftt_memcpy((char *)dst, (char *)src, len));
+		return (ft_mmcpy((char *)dst, (char *)src, len));
 	else
 	{
-		src += len;
 		dst += len;
-		while (len-- > 0)
+		src += len;
+		while (len > 0)
 		{
 			*(char *)--dst = *(char *)--src;
+			len--;
 		}
 		return (dst);
 	}

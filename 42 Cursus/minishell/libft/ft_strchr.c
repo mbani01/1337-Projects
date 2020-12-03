@@ -3,44 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/10 13:43:15 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/16 12:27:46 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/10 13:36:19 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/21 13:10:51 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
+#include "libft.h"
 
-static	size_t	ft_strl(const char *s)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t i;
+	char	j;
+	char	*ptr;
+	int		i;
 
+	j = c;
+	ptr = (char *)s;
 	i = 0;
-	while (*s)
-	{
+	while (ptr[i])
 		i++;
-		s++;
-	}
-	return (i);
-}
-
-char			*ft_strchr(const char *s, int c)
-{
-	char b;
-	char *x;
-
-	x = (char *)s;
-	b = (unsigned char)c;
-	if (b == '\0')
-		return (x + ft_strl(x));
-	while (*x)
+	if (j == '\0')
+		return (ptr + i);
+	while (*ptr)
 	{
-		if (b == *x)
-		{
-			return (x);
-		}
-		x++;
+		if (*ptr == j)
+			return (ptr);
+		ptr++;
 	}
 	return (NULL);
 }

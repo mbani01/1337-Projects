@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/10 12:46:26 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/15 23:01:08 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/10 13:00:34 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/21 13:12:34 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_toupper(int c)
+int		ft_toupper(int c)
 {
 	if (c >= 'a' && c <= 'z')
-	{
 		c -= 32;
-	}
+	else
+		return (c);
 	return (c);
 }

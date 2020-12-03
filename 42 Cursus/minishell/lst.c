@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/11 20:12:47 by mbani             #+#    #+#             */
-/*   Updated: 2020/11/06 12:00:36 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/03 11:51:12 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,37 +25,6 @@ t_env	*ft_lstnewenv(char *key, char *value)
 	return (ptr);
 }
 
-void	ft_lstadd_backenv(t_env **alst, t_env *new)
-{
-	t_env *p;
-
-	p = *alst;
-	if (*alst == NULL)
-	{
-		*alst = new;
-		new->next = NULL;
-	}
-	else
-	{
-		while (p->next)
-			p = p->next;
-		p->next = new;
-		new->next = NULL;
-	}
-}
-void	ft_lstclearenv(t_env **lst)
-{
-	t_env *tmp;
-
-	while (*lst)
-	{
-		tmp = (*lst)->next;
-		free((*lst)->key);
-		free((*lst)->value);
-		free(*lst);
-		*lst = tmp;
-	}
-}
 void	ft_lstclearcmd(t_cmd **lst)
 {
 	t_cmd *tmp;
@@ -64,10 +33,13 @@ void	ft_lstclearcmd(t_cmd **lst)
 	{
 		tmp = (*lst)->next;
 		free((*lst)->string);
+		(*lst)->string = NULL;
 		free(*lst);
+		*lst = NULL;
 		*lst = tmp;
 	}
 }
+
 t_cmd	*ft_lstnew_cmd(char *string, enum e_type t)
 {
 	t_cmd *ptr;
@@ -80,6 +52,7 @@ t_cmd	*ft_lstnew_cmd(char *string, enum e_type t)
 	ptr->next = NULL;
 	return (ptr);
 }
+
 void	ft_lstadd_backcmd(t_cmd **alst, t_cmd *new)
 {
 	t_cmd *p;

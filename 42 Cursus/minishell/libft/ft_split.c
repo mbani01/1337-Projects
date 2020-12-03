@@ -3,42 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/19 20:01:43 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/22 12:32:21 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/20 16:39:27 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/22 11:02:45 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 static	int		count_word(char const *str, char c)
 {
 	int i;
+	int is_c;
+	int words;
 
-	i = 1;
-	if (*str == '\0')
-		return (0);
-	if (*str == c)
-		i = 0;
-	while (*str == c)
-		str++;
-	str -= 1;
-	while (*str)
+	is_c = 1;
+	i = 0;
+	words = 0;
+	while (str[i])
 	{
-		if ((*str == c) && (*(str + 1) != c))
+		if (str[i] == c)
+			is_c = 1;
+		else if (is_c == 1)
 		{
-			if (*(str + 1) != '\0')
-				i++;
-			str++;
+			words++;
+			is_c = 0;
 		}
-		else
-			str++;
+		i++;
 	}
-	return (i);
+	return (words);
 }
 
-static	int		ft_cc(char const *s, char c)
+static	int		ft_countchar(char const *s, char c)
 {
 	int comp;
 
@@ -50,7 +47,7 @@ static	int		ft_cc(char const *s, char c)
 	return (comp);
 }
 
-char			**ft_free(char **ptr, int j)
+char			**ft_memfre(char **ptr, int j)
 {
 	while (j--)
 	{
@@ -78,8 +75,8 @@ char			**ft_split(char const *s, char c)
 		a = 0;
 		while (*s == c)
 			s++;
-		if (!(ptr[j] = (char *)malloc(sizeof(char) * ft_cc(s, c) + 1)))
-			return (ft_free(ptr, j));
+		if (!(ptr[j] = (char *)malloc(sizeof(char) * (ft_countchar(s, c) + 1))))
+			return (ft_memfre(ptr, j));
 		while (*(char *)s != c && *s)
 			ptr[j][a++] = *s++;
 		ptr[j++][a] = '\0';

@@ -3,37 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/13 19:04:43 by mbani             #+#    #+#             */
-/*   Updated: 2019/10/16 19:24:34 by mbani            ###   ########.fr       */
+/*   Created: 2019/10/14 12:08:35 by mamoussa          #+#    #+#             */
+/*   Updated: 2019/10/15 10:43:19 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
-static	void	ft_print(char c, int fd)
+static	void	ft_print(char n, int fd)
 {
-	write(fd, &c, 1);
+	write(fd, &n, 1);
 }
 
 void			ft_putnbr_fd(int n, int fd)
 {
-	unsigned int new_nb;
+	unsigned int div;
 
-	new_nb = n;
+	div = n;
 	if (n < 0)
 	{
 		ft_print('-', fd);
-		new_nb = n * -1;
+		div = div * -1;
 	}
-	if (new_nb > 9)
+	if (div > 9)
 	{
-		ft_putnbr_fd(new_nb / 10, fd);
-		ft_print((new_nb % 10) + '0', fd);
+		ft_putnbr_fd(div / 10, fd);
+		ft_print((div % 10) + '0', fd);
 	}
-	if (new_nb <= 9)
-	{
-		ft_print((new_nb) + '0', fd);
-	}
+	if (div <= 9)
+		ft_print(div + '0', fd);
 }
