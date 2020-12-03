@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/11/18 17:10:27 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/02 17:23:04 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,13 +216,13 @@ static	int g_x;
 int		add_to_list_bulk(char **tmp, char **op, int *i, int *j)
 {
 	enum e_type t;
-
 	if (g_x == 0 || g_x == -100020)
 		t = cmd;
 	else
 		t = arg;
-	if (g_x == 0 && !*tmp[0] && (op[0][0] == '<' || op[0][0] == '>'))
-		g_x = -100000;
+	// if (g_x == 0 && !*tmp[0] && (op[0][0] == '<' || op[0][0] == '>' ||
+	// (op[0][0] == '>' && op[0][1] == '>')))
+	// 	g_x = -100000;
 	if (*tmp[0])
 		add_to_list(tmp, t);
 	if (*j == 1 && *op[0])
@@ -282,26 +282,8 @@ void	line_split(char *line)
 		if (line[i])
 			i += add_string(line + i, &sngl, &dbl);
 	}
-	// t_cmd *tmp = g_cmd_head;
-	// while (tmp->next)
-	// {
-	// 	ft_putstr_fd(tmp->string, 1);
-		// ft_putstr_fd(" : ", 1);
-		// ft_putnbr_fd(tmp->type, 1);
-	// 	ft_putchar_fd('\n', 1);
-	// 	tmp = tmp->next;
-		
-	// }
-	// ft_putstr_fd(tmp->string, 1);
-	// ft_putstr_fd(" : ", 1);
-	// ft_putnbr_fd(tmp->type, 1);
-	// ft_putchar_fd('\n', 1);
+	red_file_cmd(g_cmd_head);
 }
-
-// void	quotes_fill(t_expan *expan, char **str, int i)
-// {
-
-// }
 
 void	cp_before_$(int *k, int len, char **tmp, char **str)
 {
@@ -406,7 +388,7 @@ int		char_count(char **str, int i, int *j)
 	return (*j);
 }
 
-void	dolar_check(char **str)
+void	 dolar_check(char **str)
 {
 	int 	i;
 	int		j;
@@ -490,7 +472,6 @@ void	quote_removal(char **str)
 	int		i;
 	char	*tmp;
 	char	*temp;
-
 	quote_removal_init(&quote, &tmp, &temp, &i);
 	while (str[0][i])
 	{
@@ -499,7 +480,9 @@ void	quote_removal(char **str)
 		if (str[0][i] == '\\' && quote.sng != 1)
 			rm_backslash(&temp, str, &tmp, &i);
 		else if ((str[0][i] == '\'' && quote.dbl != 1)
-		|| (str[0][i] == '\"' && quote.sng != 1))
+		|| (str[0][i] == '\"' && quote.sng != 1) ||
+		(str[0][i] == '$' && quote.dbl != 1 && quote.sng != 1 &&
+		(str[0][i + 1] == '\'' || str[0][i + 1] == '\"')))
 		{
 			i++;
 			continue ;
@@ -533,41 +516,39 @@ void	line_parser(char *line)
 	line_split(line);
 	if (line[0])
 	param_expansion(g_cmd_head);
-	t_cmd *tmp = g_cmd_head;
-	while (tmp->next)
-	{
-		ft_putstr_fd(tmp->string, 1);
-		ft_putstr_fd(" : ", 1);
-		ft_putnbr_fd(tmp->type, 1);
-		ft_putchar_fd('\n', 1);
-		tmp = tmp->next;
-	}
-	ft_putstr_fd(tmp->string, 1);
-	ft_putstr_fd(" : ", 1);
-	ft_putnbr_fd(tmp->type, 1);
-	ft_putchar_fd('\n', 1);
-	if (g_cmd_head)
-	ft_lstclearcmd(&g_cmd_head);
+
 }
 
 int		main(int argc, char  **argv, char **envp)
 {
 	int ret;
-	char *line;
+	// char *line;
 
 	(void) argc;
 	(void) argv;
+	cpy_env(envp);
 	env_var(envp);
 	while (1)
 	{
 		write(1, "Minishell-2.0$ ", 15);
-		ret = get_next_line(0, &line);
+		ret = get_next_line(0, &g_line);
 		if (!ret)
 			break ;
-		line_parser(line);
-		free(line);
+		line_parser(g_line);
+		g_tmp_cmd = g_cmd_head;
+		if ((syntax_error(g_tmp_cmd)) && (swap_lst(&g_tmp_cmd)))
+		{
+			ft_execution(g_line, g_tmp_cmd);
+		}
+		if (g_tmp_cmd)
+			ft_lstclearcmd(&g_tmp_cmd);
+		free(g_line);
 	}
-	free(line);
+	free(g_line);
 	ft_lstclearenv(&g_env_head);/* free env var  */
+	if (g_tmp_cmd)
+			ft_lstclearcmd(&g_tmp_cmd);
+	if (g_tmp_env)
+		double_pointer_free(g_tmp_env);
 	return (0);
 }
