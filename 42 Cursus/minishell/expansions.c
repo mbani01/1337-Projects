@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 11:34:53 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 14:17:23 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/08 16:31:53 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,36 @@ int		char_count(char **str, int i, int *j)
 	return (*j);
 }
 
+void	init(int *i, int *j, t_expan *expan)
+{
+	expan->sng = 0;
+	expan->dbl = 0;
+	*i = 0;
+	*j = 0;
+}
+
+int		dollar_found(char **str, t_expan *expan, int *i)
+{
+	quote_check(&expan->sng, &expan->dbl, str[0], *i);
+	if (expan->sng == 1)
+	{
+		*i += 1;
+		return (1);
+	}
+	return (0);
+}
+
 void	dolar_check(char **str)
 {
 	int		i;
 	int		j;
 	t_expan	expan;
 
-	expan.sng = 0;
-	expan.dbl = 0;
-	i = 0;
-	j = 0;
+	init(&i, &j, &expan);
 	while (str[0][i])
 	{
-		quote_check(&expan.sng, &expan.dbl, str[0], i);
-		if (expan.sng == 1)
-		{
-			i++;
+		if(dollar_found(str, &expan, &i))
 			continue;
-		}
 		else
 		{
 			if (str[0][i] == '$' && not_escaped(str[0], i))
@@ -74,40 +86,3 @@ void	param_expansion(t_cmd *tmp)
 	dolar_check(&(tmp->string));
 	quote_removal(&(tmp->string));
 }
-
-
-// void	dolar_check(char **str)
-// {
-// 	int		i;
-// 	int		j;
-// 	t_expan	expan;
-
-// 	expan.sng = 0;
-// 	expan.dbl = 0;
-// 	i = 0;
-// 	j = 0;
-// 	while (str[0][i])
-// 	{
-// 		quote_check(&expan.sng, &expan.dbl, str[0], i);
-// 		if (expan.sng == 1)
-// 		{
-// 			i++;
-// 			continue;
-// 		}
-// 		else
-// 		{
-// 			if (str[0][i] == '$' && not_escaped(str[0], i))
-// 				i += char_count(str, i + 1, &j);
-// 			if (j)
-// 			{
-// 				if ((search_and_replace(str, i, j)) == 0)
-// 				{
-// 					replace(str, "", j, i);
-// 					i -= j;
-// 				}
-// 				j = 0;
-// 			}
-// 		}
-// 		i++;
-// 	}
-// }

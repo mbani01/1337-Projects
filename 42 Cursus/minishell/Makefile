@@ -6,7 +6,7 @@
 #    By: mbani <mbani@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/03/11 17:51:39 by mbani             #+#    #+#              #
-#    Updated: 2020/12/03 12:24:27 by mbani            ###   ########.fr        #
+#    Updated: 2020/12/03 17:55:50 by mbani            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRC = cpy_env.c double_pointer_free.c env_var.c expansions.c ft_cd.c ft_cd_helpe
 
 all : $(NAME)
 
-$(NAME):
+$(NAME):$(SRC)
 	make -C ./libft
 	gcc -Wall -Wextra -Werror $(SRC) libft/libft.a -g -o minishell
 clean:
