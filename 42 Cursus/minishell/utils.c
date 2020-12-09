@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 11:08:11 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 11:12:42 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/09 11:49:26 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ void	cp_from_$(int *k, char **tmp, char **env, int *x)
 
 void replace(char **str, char *env, int j, int i)
 {
-	char *tmp;
-	int k;
-	int len;
-	int x;
+	char	*tmp;
+	int		k;
+	int		len;
+	int		x;
 
 	k = 0;
 	x = 0;
@@ -76,9 +76,17 @@ void replace(char **str, char *env, int j, int i)
 
 int	search_and_replace(char **str, int i, int j)
 {
-	t_env *tmp;
+	t_env	*tmp;
+	char	ret[1];
 
 	tmp = g_env_head;
+	ret[0] = 127;
+	if (str[0][i - j + 1] == '?')
+	{
+		str[0][i - j] = 127;
+		str[0][i - j + 1] = 127;
+		return (1);
+	}	
 	while (tmp->next)
 	{
 		if ((ft_strncmp_env(&str[0][i - j + 1], tmp->key, j)) == 0)

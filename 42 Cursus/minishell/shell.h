@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/11 20:08:51 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 12:08:06 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/09 12:27:52 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,7 @@ void	add_to_list(char **tmp, enum e_type t);
 int		find_cmd_red(t_cmd **tmp_before_cmd, t_cmd **tmp_red, t_cmd **lst);
 void	param_expansion(t_cmd *tmp);
 int		add_to_list_bulk(char **tmp, char **op, int *i, int *j);
+void	replace_return_value(t_cmd **str, size_t value);
+void	ft_lstadd_echo(t_cmd **lst);
+int		add_echo(t_cmd **lst);
 #endif

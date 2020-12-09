@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 11:34:53 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/08 16:31:53 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/08 17:20:31 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 int		char_count(char **str, int i, int *j)
 {
+	if (str[0][i] == '?')
+	{
+		*j += 1;
+		return (*j);
+	}
 	while (str[0][i])
 	{
 		if (((str[0][i] >= 'a' && str[0][i] <= 'z') ||
@@ -55,7 +60,7 @@ void	dolar_check(char **str)
 	init(&i, &j, &expan);
 	while (str[0][i])
 	{
-		if(dollar_found(str, &expan, &i))
+		if (dollar_found(str, &expan, &i))
 			continue;
 		else
 		{

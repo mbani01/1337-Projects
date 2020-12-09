@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 17:56:43 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/09 12:37:39 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int		main(int argc, char  **argv, char **envp)
 			break ;
 		line_parser(g_line);
 		g_tmp_cmd = g_cmd_head;
-		if (g_tmp_cmd && (syntax_error(g_tmp_cmd)) && (swap_lst(&g_tmp_cmd)))
+		if (g_tmp_cmd && (syntax_error(g_tmp_cmd)) && (swap_lst(&g_tmp_cmd)) &&( add_echo(&g_tmp_cmd)))
 			ft_execution(g_line, g_tmp_cmd);
 		if (g_tmp_cmd)
 			ft_lstclearcmd(&g_tmp_cmd);
