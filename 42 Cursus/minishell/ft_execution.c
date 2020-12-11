@@ -3,113 +3,86 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execution.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/10 12:54:49 by mamoussa          #+#    #+#             */
-/*   Updated: 2020/12/09 11:05:27 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/10 19:36:38 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void	ft_not_command(void)
+void	glob_var_init(void)
 {
-	;
+	g_fd_in = 0;
+	g_fd_out = 0;
+	g_is_in = 0;
+	g_is_out = 0;
 }
 
-void	ft_copy(char *val, char *str, char **tmp, int k)
+void	ft_exec_helper(void)
 {
-	int x;
-	int j;
+	t_cmd	*current;
+	t_pipe	*new_node;
+	size_t	index;
 
-	x = 0;
-	j = k + 2;
-	while (val[x])
+	g_pipe_head = NULL;
+	current = g_cmd_head;
+	index = 0;
+	while (current)
 	{
-		tmp[0][k] = val[x];
-		k++;
-		x++;
-	}
-	while (str[j])
-	{
-		tmp[0][k] = str[j];
-		k++;
-		j++;
-	}
-}
-
-void	replace_1(char **str, char *val)
-{
-	int		len;
-	int		k;
-	char	*tmp;
-
-	k = 0;
-	len = ft_strlen(str[0]) + ft_strlen(val);
-	tmp = ft_calloc(len, len);
-	tmp[len] = '\0';
-	while (str[0][k] != 127)
-	{
-		tmp[k] = str[0][k];
-		k++;
-	}
-	ft_copy(val, str[0], &tmp, k);
-	free(str[0]);
-	str[0] = NULL;
-	str[0] = tmp;
-}
-
-void	replace_return_value(t_cmd **str, size_t value)
-{
-	t_cmd	*tmp;
-	int		i;
-	char	*val;
-
-	tmp = str[0];
-	val = ft_itoa((int)value);
-	while (tmp)
-	{
-		i = 0;
-		while (tmp->string[i])
+		if (current->type == cmd)
 		{
-			if (tmp->string[i] == 127)
-				replace_1(&tmp->string, val);
-			i++;
+			new_node = new_node_index(index);
+			add_back(new_node);
+			index++;
 		}
-		tmp = tmp->next;
+		else if (current->type == semicolumn)
+			index = 0;
+		current = current->next;
 	}
-	free(val);
-	val = NULL;
+}
+
+void	close_all(void)
+{
+	if (g_cur->index == 0 && (g_cur->fd0 > 2) && (g_cur->fd1 > 2))
+		close(g_cur->fd1);
+	else if (g_cur->index > 0 && (g_cur->fd0 > 2) && (g_cur->fd1 > 2))
+	{
+		close(g_cur->prev->fd0);
+		close(g_cur->fd1);
+	}
+	else if (g_cur->prev->fd0 > 2)
+		close(g_cur->prev->fd0);
+	if (g_fd_in > 2)
+		close(g_fd_in);
+	if (g_fd_out > 2)
+		close(g_fd_out);
+}
+
+void	free_pipe(void)
+{
+	t_pipe *tmp;
+
+	while (g_pipe_head)
+	{
+		tmp = g_pipe_head->next;
+		free(g_pipe_head);
+		g_pipe_head = NULL;
+		g_pipe_head = tmp;
+	}
 }
 
 void	ft_execution(char *line, t_cmd *tmp)
 {
-	replace_return_value(&g_cmd_head, 500);
+	ft_exec_helper();
+	g_cur = g_pipe_head;
 	while (g_cmd_head)
 	{
-		if (g_cmd_head->type == cmd)
-		{
-			if (!ft_strncmp(g_cmd_head->string, "echo", ft_strlen("echo")))
-				ft_echo();
-			else if (!ft_strncmp(g_cmd_head->string, "cd", ft_strlen("cd")))
-				ft_cd();
-			else if (!ft_strncmp(g_cmd_head->string, "pwd", ft_strlen("pwd")))
-				ft_pwd();
-			else if (!ft_strncmp(g_cmd_head->string, "unset", ft_strlen("unset")))
-				ft_unset();
-			else if (!ft_strncmp(g_cmd_head->string, "export", ft_strlen("export")))
-				ft_export();
-			else if (!ft_strncmp(g_cmd_head->string, "env", ft_strlen("env")))
-				ft_env();
-			else if (!ft_strncmp(g_cmd_head->string, "exit", ft_strlen("exit")))
-			{
-				ft_exit(line, tmp);
-			}
-			else
-				ft_not_builtin();
-		}
-		else
-			ft_not_command();
+		replace_return_value(&g_cmd_head, g_status);
+		if (ft_exec1(line, tmp))
+			return ;
 		g_cmd_head = (g_cmd_head) ? g_cmd_head->next : g_cmd_head;
 	}
+	free_pipe();
 }

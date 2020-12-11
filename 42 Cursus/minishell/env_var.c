@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 11:28:42 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 11:31:35 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/11 12:27:41 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int		env_spliter(char *env, char **key, char **value)
 			{
 				env[i] = '\0';
 				*key = ft_strdup(env);
-				*value = ft_strdup(&env[i+1]);
+				*value = ft_strdup(&env[i + 1]);
 			}
 			i++;
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_echo.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 12:15:59 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/09 12:34:42 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/11 12:26:57 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	ft_lstadd_echo(t_cmd **lst)
 	flag->next = tmp_head;
 	lst[0] = echo;
 }
-int	add_echo(t_cmd **lst)
+
+int		add_echo(t_cmd **lst)
 {
 	t_cmd *tmp;
 
@@ -34,7 +35,8 @@ int	add_echo(t_cmd **lst)
 		ft_lstadd_echo(lst);
 	while (tmp)
 	{
-		if ((tmp->type == pipee || tmp->type == semicolumn) && tmp->next && tmp->next->type != cmd)
+		if ((tmp->type == pipee || tmp->type == semicolumn) &&
+		tmp->next && tmp->next->type != cmd)
 			ft_lstadd_echo(&tmp->next);
 		tmp = tmp->next;
 	}

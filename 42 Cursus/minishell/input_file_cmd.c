@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_file_cmd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/27 16:18:55 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 12:10:55 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/11 12:31:22 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int		swap_lst(t_cmd **cmd_lst)
 	tmp = cmd_lst[0];
 	while (tmp->next)
 	{
-		if((tmp->type == input_red || tmp->type == output_red ||
+		if ((tmp->type == input_red || tmp->type == output_red ||
 		tmp->type == append_output) && tmp->next->type == arg)
 			tmp->next->type = filename;
 		if ((tmp->type == semicolumn || tmp->type == pipee))

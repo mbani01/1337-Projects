@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 11:00:47 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 11:04:58 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/11 18:00:58 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	quote_removal(char **str)
 	int		i;
 	char	*tmp;
 	char	*temp;
+
 	quote_removal_init(&quote, &tmp, &temp, &i);
 	while (str[0][i])
 	{
@@ -103,7 +104,5 @@ void	quote_removal(char **str)
 			join(&temp, &tmp);
 		i++;
 	}
-	free(str[0]);
-	str[0] = tmp;
-	free(temp);
+	quote_removal_free(str, &tmp, &temp);
 }

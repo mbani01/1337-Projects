@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   operators.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 11:05:47 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 11:10:27 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/11 12:30:50 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-int		operators(char **line, int i, char **op)
+int				operators(char **line, int i, char **op)
 {
 	int j;
 
@@ -52,7 +52,7 @@ enum	e_type	operators_check(char *op)
 	return (arg);
 }
 
-int		separators_check(char **tmp, int *i, char **op, int *j)
+int				separators_check(char **tmp, int *i, char **op, int *j)
 {
 	if ((tmp[0][*i] == ' ' || tmp[0][*i] == '\t') || ((tmp[0][*i] == ';' ||
 		tmp[0][*i] == '|' || tmp[0][*i] == '<' ||

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/09 12:37:39 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/11 12:21:17 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,33 +48,52 @@ void	line_parser(char *line)
 		param_expansion(g_cmd_head);
 }
 
-int		main(int argc, char  **argv, char **envp)
+void	sig_handler(int seg)
 {
-	int ret;
+	g_is_sigint = 0;
+	if (seg == SIGINT && !g_is_cmd)
+		write(1, "\nminishell-2.0$\t", 18);
+	else
+		g_is_sigint = 1;
+	if (seg == SIGQUIT && !g_is_cmd)
+		write(1, "\b\b", 2);
+	else if (!g_is_sort && seg == SIGQUIT)
+		write(1, "Quit: 3", 7);
+}
 
-	(void) argc;
-	(void) argv;
+void	main_1(char **envp)
+{
 	cpy_env(envp);
 	env_var(envp);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
+}
+
+int		main(int argc, char **argv, char **envp)
+{
+	int		ret;
+	char	*line;
+
+	(void)argc;
+	(void)argv;
+	main_1(envp);
+	line = NULL;
 	while (1)
 	{
-		write(1, "Minishell-2.0$ ", 15);
-		ret = get_next_line(0, &g_line);
+		if (!line)
+			write(1, "minishell-2.0$ ", 15);
+		g_tmp = NULL;
+		ret = get_next_line(0, &line);
 		if (!ret)
-			break ;
-		line_parser(g_line);
-		g_tmp_cmd = g_cmd_head;
-		if (g_tmp_cmd && (syntax_error(g_tmp_cmd)) && (swap_lst(&g_tmp_cmd)) &&( add_echo(&g_tmp_cmd)))
-			ft_execution(g_line, g_tmp_cmd);
-		if (g_tmp_cmd)
-			ft_lstclearcmd(&g_tmp_cmd);
-		free(g_line);
+		{
+			write(1, "exit", 4);
+			ft_exit(line, g_tmp_cmd);
+		}
+		line_parser(line);
+		main_3(line);
+		free(line);
+		line = NULL;
 	}
-	free(g_line);
-	ft_lstclearenv(&g_env_head);
-	if (g_tmp_cmd)
-		ft_lstclearcmd(&g_tmp_cmd);
-	if (g_tmp_env)
-		double_pointer_free(g_tmp_env);
+	main_2(line);
 	return (0);
 }

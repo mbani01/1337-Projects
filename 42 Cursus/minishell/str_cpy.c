@@ -6,27 +6,27 @@
 /*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/22 11:14:55 by mamoussa          #+#    #+#             */
-/*   Updated: 2020/11/22 11:15:09 by mamoussa         ###   ########.fr       */
+/*   Updated: 2020/12/10 18:04:42 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void    str_cpy(char **dst, char** src)
+void	str_cpy(char **dst, char **src)
 {
-    size_t  i;
-    size_t  j;
+	size_t	i;
+	size_t	j;
 
-    i = 0;
-    j = 0;
-    while (src[0][i])
-    {
-        if (src[0][i] == '~')
-        {
-            i++;
-            continue; 
-        }
-        dst[0][j++]= src[0][i++];
-    }
-    src[0][j] = '\0';
+	i = 0;
+	j = 0;
+	while (src[0][i])
+	{
+		if (src[0][i] == '~')
+		{
+			i++;
+			continue ;
+		}
+		dst[0][j++] = src[0][i++];
+	}
+	src[0][j] = '\0';
 }

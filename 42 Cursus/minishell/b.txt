@@ -1,0 +1,3 @@
+okay
+hello >> b.txt
+Minishell-2.0$ 

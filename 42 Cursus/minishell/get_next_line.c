@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/25 21:52:51 by mbani             #+#    #+#             */
-/*   Updated: 2020/03/12 11:25:23 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/11 12:49:49 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include "get_next_line.h"
+#include "shell.h"
 
 #define BUFFER_SIZE 100
 
@@ -86,9 +87,10 @@ int		get_next_line(int fd, char **line)
 	ch = save_check(save, line);
 	while (!(ch))
 	{
-		if ((ret = read(fd, buff, BUFFER_SIZE)) == 0)
+		if ((ret = read(fd, buff, BUFFER_SIZE)) == 0 && !g_buff)
 			return (body_check(&save, &buff));
 		buff[ret] = '\0';
+		get_next_line_helper(buff);
 		if ((ch = ft_strchr(buff, '\n')))
 			ft_save(&save, &ch);
 		tmp = *line;

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 10:55:54 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 10:58:24 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/11 17:59:35 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,17 @@ void	line_split(char *line)
 			i += add_string(line + i, &sngl, &dbl);
 	}
 	red_file_cmd(g_cmd_head);
+}
+
+void	quote_removal_free(char **str, char **tmp, char **temp)
+{
+	free(str[0]);
+	str[0] = tmp[0];
+	free(temp[0]);
+}
+
+void	search_and_replace_help(char **str, int i, int j)
+{
+	str[0][i - j] = 127;
+	str[0][i - j + 1] = 127;
 }

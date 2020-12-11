@@ -3,26 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   swap_lst.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/26 09:47:24 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/03 11:50:18 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/11 13:16:21 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-void	ft_lstclearnod(t_cmd *back, t_cmd *next)
-{
-	t_cmd *temp;
-
-	temp = back->next;
-	back->next = next;
-	free(temp->string);
-	temp->string = NULL;
-	free(temp);
-	temp = NULL;
-}
 
 int		find_red(t_cmd **tmp_red, t_cmd **lst)
 {
@@ -68,7 +56,7 @@ int		find_cmd_red(t_cmd **tmp_before_cmd, t_cmd **tmp_red, t_cmd **lst)
 		return (0);
 }
 
-void		arg_found(t_cmd **tmp_arg, t_cmd **tmp_before_arg, t_cmd **tmp_cmd)
+void	arg_found(t_cmd **tmp_arg, t_cmd **tmp_before_arg, t_cmd **tmp_cmd)
 {
 	tmp_arg[0] = ft_lstnew_cmd(tmp_before_arg[0]->next->string,
 	tmp_before_arg[0]->next->type);

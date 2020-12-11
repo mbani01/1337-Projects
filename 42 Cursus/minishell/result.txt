@@ -1,0 +1,3 @@
+hello >> result.txt
+Minishell-2.0$ hello >> result.txt
+Minishell-2.0$ 

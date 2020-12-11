@@ -1,0 +1,2 @@
+env ; | sort //error for the token pipe
+unset key | sort //key should not be deleted : solved

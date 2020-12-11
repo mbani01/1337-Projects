@@ -1,0 +1,2 @@
+hello >> text.txt
+Minishell-2.0$ 
