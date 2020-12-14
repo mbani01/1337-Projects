@@ -1,3 +1,0 @@
-okay
-hello >> c.txt
-Minishell-2.0$ 

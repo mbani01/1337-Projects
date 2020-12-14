@@ -6,7 +6,7 @@
 /*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/08 16:20:47 by mamoussa          #+#    #+#             */
-/*   Updated: 2020/12/11 17:04:44 by mamoussa         ###   ########.fr       */
+/*   Updated: 2020/12/12 14:25:54 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,11 @@ size_t	lexer_checker(char *str)
 	i = 0;
 	while (str[i])
 	{
+		if (str[i] == '=')
+			return (0);
 		if (!(str[i] >= '0' && str[i] <= '9') &&
 		!(str[i] >= 'a' && str[i] <= 'z') && !(str[i] >= 'A' && str[i] <= 'Z')
-		&& str[i] != '_' && str[i] != '=')
+		&& str[i] != '_')
 			return (1);
 		i++;
 	}

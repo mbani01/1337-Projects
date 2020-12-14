@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/18 17:54:10 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/11 12:21:17 by mamoussa         ###   ########.fr       */
+/*   Updated: 2020/12/12 20:30:15 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,16 @@ void	line_parser(char *line)
 	g_x = 0;
 	line = rm_spaces(line);
 	line_split(line);
-	if (line[0])
-		param_expansion(g_cmd_head);
 }
 
 void	sig_handler(int seg)
 {
 	g_is_sigint = 0;
 	if (seg == SIGINT && !g_is_cmd)
+	{
+		g_len = ft_strlen(g_line);
 		write(1, "\nminishell-2.0$\t", 18);
+	}
 	else
 		g_is_sigint = 1;
 	if (seg == SIGQUIT && !g_is_cmd)
@@ -72,28 +73,28 @@ void	main_1(char **envp)
 int		main(int argc, char **argv, char **envp)
 {
 	int		ret;
-	char	*line;
 
 	(void)argc;
 	(void)argv;
 	main_1(envp);
-	line = NULL;
+	g_line = NULL;
 	while (1)
 	{
-		if (!line)
+		if (!g_line)
 			write(1, "minishell-2.0$ ", 15);
 		g_tmp = NULL;
-		ret = get_next_line(0, &line);
+		g_len = 0;
+		ret = get_next_line(0, &g_line);
 		if (!ret)
+			ft_exit(g_line, g_tmp_cmd);
+		line_parser(g_line);
+		main_3(g_line);
+		if (g_line)
 		{
-			write(1, "exit", 4);
-			ft_exit(line, g_tmp_cmd);
+			free(g_line);
+			g_line = NULL;
 		}
-		line_parser(line);
-		main_3(line);
-		free(line);
-		line = NULL;
 	}
-	main_2(line);
+	main_2(g_line);
 	return (0);
 }

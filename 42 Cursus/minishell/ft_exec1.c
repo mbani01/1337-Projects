@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/09 10:33:43 by mamoussa          #+#    #+#             */
-/*   Updated: 2020/12/10 20:45:13 by mamoussa         ###   ########.fr       */
+/*   Updated: 2020/12/12 11:40:19 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ size_t	ft_exec1(char *line, t_cmd *tmp)
 			ft_exec2(line, tmp);
 			g_cur = g_cur->next;
 		}
-		g_cmd_head = (g_cmd_head) ? g_cmd_head->next : g_cmd_head;
+		g_cmd_head = (g_cmd_head && g_cmd_head->type != semicolumn) ?
+		g_cmd_head->next : g_cmd_head;
 	}
 	ft_exec3();
 	g_is_pipe = 0;

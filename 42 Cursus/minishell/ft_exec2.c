@@ -6,7 +6,7 @@
 /*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/05 11:15:20 by mamoussa          #+#    #+#             */
-/*   Updated: 2020/12/11 13:56:39 by mamoussa         ###   ########.fr       */
+/*   Updated: 2020/12/12 14:13:23 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,6 @@ void	ft_exec3(void)
 	g_is_cmd = 0;
 	if (g_is_sigint && WIFSIGNALED(g_status))
 		write(1, "\n", 1);
-	if (g_status != 1)
+	if (g_status != 1 && g_status != 127 && g_status != 0)
 		g_status = WEXITSTATUS(g_status);
 }

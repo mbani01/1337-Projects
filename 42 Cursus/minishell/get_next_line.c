@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/25 21:52:51 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/11 12:49:49 by mamoussa         ###   ########.fr       */
+/*   Updated: 2020/12/12 20:49:11 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,27 +76,28 @@ void	ft_save(char **save, char **ch)
 int		get_next_line(int fd, char **line)
 {
 	int			ret;
-	char		*buff;
 	static char	*save;
 	char		*ch;
 	char		*tmp;
 
 	if (read(fd, NULL, 0) != 0 || fd < 0 ||
-	!(buff = malloc(sizeof(char) * (BUFFER_SIZE + 1))) || !line)
+	!(g_buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1))) || !line)
 		return (-1);
 	ch = save_check(save, line);
 	while (!(ch))
 	{
-		if ((ret = read(fd, buff, BUFFER_SIZE)) == 0 && !g_buff)
-			return (body_check(&save, &buff));
-		buff[ret] = '\0';
-		get_next_line_helper(buff);
-		if ((ch = ft_strchr(buff, '\n')))
+		if ((ret = read(fd, g_buffer, BUFFER_SIZE)) == 0 && !g_buff)
+			return (body_check(&save, &g_buffer));
+		g_buffer[ret] = '\0';
+		if (g_len > 0)
+			delete_pre();
+		get_next_line_helper(g_buffer);
+		if ((ch = ft_strchr(g_buffer, '\n')))
 			ft_save(&save, &ch);
 		tmp = *line;
-		*line = ft_strjoin_gnl(*line, buff);
+		*line = ft_strjoin_gnl(*line, g_buffer);
 		free(tmp);
 	}
-	free(buff);
+	free_g_buff();
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execution.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/10 12:54:49 by mamoussa          #+#    #+#             */
-/*   Updated: 2020/12/10 19:36:38 by mamoussa         ###   ########.fr       */
+/*   Updated: 2020/12/12 11:43:50 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	ft_execution(char *line, t_cmd *tmp)
 	g_cur = g_pipe_head;
 	while (g_cmd_head)
 	{
+		param_expansion(g_cmd_head);
 		replace_return_value(&g_cmd_head, g_status);
 		if (ft_exec1(line, tmp))
 			return ;

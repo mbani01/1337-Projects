@@ -6,7 +6,7 @@
 /*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/10 12:45:49 by mamoussa          #+#    #+#             */
-/*   Updated: 2020/12/10 16:33:24 by mamoussa         ###   ########.fr       */
+/*   Updated: 2020/12/12 14:04:56 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,6 @@ size_t	erro_cheker(void)
 		return (1);
 	}
 	g_cmd_head = g_cmd_head->next;
-	if (g_cmd_head && (g_cmd_head->type != semicolumn) &&
-	(g_cmd_head->type != pipee))
-	{
-		write(2, "pwd: too many arguments\n",
-		ft_strlen("pwd: too many arguments\n"));
-		g_status = 127;
-		return (1);
-	}
 	return (0);
 }
 

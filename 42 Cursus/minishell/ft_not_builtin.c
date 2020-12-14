@@ -6,7 +6,7 @@
 /*   By: mamoussa <mamoussa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 16:28:57 by mamoussa          #+#    #+#             */
-/*   Updated: 2020/12/10 16:28:59 by mamoussa         ###   ########.fr       */
+/*   Updated: 2020/12/12 16:45:33 by mamoussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	ft_not_builtin(void)
 	counter = args_count();
 	if (!not_built_error())
 	{
+		printf("%s\n", g_cmd_head->string);
 		ft_error("command not found\n");
 		exit(127);
 	}

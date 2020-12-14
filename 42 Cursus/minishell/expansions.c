@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/03 11:34:53 by mbani             #+#    #+#             */
-/*   Updated: 2020/12/08 17:20:31 by mbani            ###   ########.fr       */
+/*   Updated: 2020/12/12 20:33:22 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,15 @@ void	dolar_check(char **str)
 
 void	param_expansion(t_cmd *tmp)
 {
-	while (tmp->next)
+	while (tmp->next && tmp->next->type != semicolumn)
 	{
 		dolar_check(&(tmp->string));
 		quote_removal(&(tmp->string));
 		tmp = tmp->next;
 	}
-	dolar_check(&(tmp->string));
-	quote_removal(&(tmp->string));
+	if (tmp->type != semicolumn)
+	{
+		dolar_check(&(tmp->string));
+		quote_removal(&(tmp->string));
+	}
 }
