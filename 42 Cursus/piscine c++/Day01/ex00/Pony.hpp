@@ -16,10 +16,10 @@
 
 class Pony{
 	private:
-		int pony;
+		std::string pony;
 	public:
 		void setpony(const char s[5]);
-		int getpony();
+		std::string getpony();
 		// Pony();
 		~Pony();
 };

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/19 17:16:50 by mbani             #+#    #+#             */
-/*   Updated: 2020/04/21 02:47:10 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/09 18:44:47 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 std::string	Human::identify()
 {
-	return br.identify();
+	return this->br.identify();
 }
-Brain& Human::getBrain()
+const Brain& Human::getBrain()
 {
-	return	br;
+	return	this->br;
 }
+Human::Human():br(getBrain()){};

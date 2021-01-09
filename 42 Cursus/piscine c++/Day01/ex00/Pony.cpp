@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/14 17:30:38 by mbani             #+#    #+#             */
-/*   Updated: 2020/04/14 19:48:09 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/03 15:33:49 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 void Pony::setpony(const char s[5])
 {
-	std::cout<<"Enter a value for ponyonthe"<<s<<": "<<std::endl;
-	std::cin>>Pony::pony;
+	std::cout<<"Enter a value for PonyOnThe"<<s<<": "<<std::endl;
+	getline(std::cin, Pony::pony);
 }
-int Pony::getpony()
+std::string Pony::getpony()
 {
 	return pony;
 }
@@ -29,14 +29,14 @@ Pony::~Pony()
 void ponyOnTheStack()
 {
 	Pony stk;
-	stk.setpony("stack");
+	stk.setpony("Stack");
 	std::cout<<"Pony is on the stack it's value is : "<<stk.getpony()<<std::endl;
 }
 void ponyOnTheHeap()
 {
 	Pony *heap;
 	heap = new Pony;
-	heap->setpony("heap");	
+	heap->setpony("Heap");	
 	std::cout<<"Pony is on the heap it's value is : "<<heap->getpony()<<std::endl;
-	delete heap; 
+	delete heap;
 }
