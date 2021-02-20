@@ -6,30 +6,61 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 20:01:21 by mbani             #+#    #+#             */
-/*   Updated: 2020/09/26 23:39:17 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/08 10:45:35 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "FragTrap.hpp"
 #include <iostream>
 
+FragTrap::FragTrap()
+{
+	
+}
+
 FragTrap::FragTrap(std::string name)
 {
-	std::cout<<"Success! My spell to make you want to hang out with me worked!"<<std::endl;
+	std::cout<<"Success! My spell to make you want to hang out with me worked! (FragTrap Constructor)"<<std::endl;
 	Hitpoints = 100;
 	Maxhitpoints = 100;
 	Energypoints = 100;
 	Maxenergypoints = 100;
 	Level = 1;
-	Name += name;
+	Name = name;
 	Meleeattackdamage = 30;
 	Rangedattackdamage = 20;
 	Armordamagereduction = 5;
 }
 
+FragTrap::FragTrap(const FragTrap &obj)
+{
+	Hitpoints = obj.Hitpoints;
+	Maxhitpoints = obj.Maxhitpoints;
+	Energypoints = obj.Energypoints;
+	Maxenergypoints = obj.Maxenergypoints;
+	Level = obj.Level;
+	Name = obj.Name;
+	Meleeattackdamage = obj.Meleeattackdamage;
+	Rangedattackdamage = obj.Rangedattackdamage;
+	Armordamagereduction = obj.Armordamagereduction;
+}
+
+void FragTrap::operator=(const FragTrap &obj)
+{
+	Hitpoints = obj.Hitpoints;
+	Maxhitpoints = obj.Maxhitpoints;
+	Energypoints = obj.Energypoints;
+	Maxenergypoints = obj.Maxenergypoints;
+	Level = obj.Level;
+	Name = obj.Name;
+	Meleeattackdamage = obj.Meleeattackdamage;
+	Rangedattackdamage = obj.Rangedattackdamage;
+	Armordamagereduction = obj.Armordamagereduction;
+}
+
 FragTrap::~FragTrap()
 {
-	std::cout<<"Stay a while, and listen. Oh god, please -- PLEASE! -- stay a while."<<std::endl;
+	std::cout<<"Stay a while, and listen. Oh god, please -- PLEASE! -- stay a while. (FragTrap Destructor)"<<std::endl;
 }
 void FragTrap::rangedAttack(std::string const &target)
 {

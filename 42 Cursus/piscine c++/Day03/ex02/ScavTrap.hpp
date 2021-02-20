@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/25 15:40:55 by mbani             #+#    #+#             */
-/*   Updated: 2020/09/26 23:41:42 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/08 10:34:17 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@
 
 class ScavTrap : public ClapTrap
 {
-
 public:
+	ScavTrap();
+	ScavTrap(std::string name);
+	ScavTrap(const ScavTrap &obj);
+	void operator=(const ScavTrap &);
+	~ScavTrap();
 	void rangedAttack(std::string const & target);
 	void meleeAttack(std::string const & target);
 	void challengeNewcomer(std::string const & target);
-	ScavTrap(std::string name);
-	~ScavTrap();
 };
 
 #endif

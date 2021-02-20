@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/19 02:47:04 by mbani             #+#    #+#             */
-/*   Updated: 2021/01/09 19:09:58 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/10 15:07:16 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include "Brain.hpp"
 #include <sstream>
 
+Brain::Brain(){}
+Brain::~Brain(){}
 std::string	Brain::identify() const
 {
 	std::stringstream s;

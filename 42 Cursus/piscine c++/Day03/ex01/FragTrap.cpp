@@ -6,30 +6,61 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 20:01:21 by mbani             #+#    #+#             */
-/*   Updated: 2020/09/25 18:43:08 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/07 17:52:07 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "FragTrap.hpp"
 #include <iostream>
 
+FragTrap::FragTrap()
+{
+	
+}
+
 FragTrap::FragTrap(std::string name)
 {
-	std::cout<<"Success! My spell to make you want to hang out with me worked!"<<std::endl;
+	std::cout<<"Success! My spell to make you want to hang out with me worked!(constructor)"<<std::endl;
 	Hitpoints = 100;
 	Maxhitpoints = 100;
 	Energypoints = 100;
 	Maxenergypoints = 100;
 	Level = 1;
-	Name += name;
+	Name = name;
 	Meleeattackdamage = 30;
 	Rangedattackdamage = 20;
 	Armordamagereduction = 5;
 }
 
+FragTrap::FragTrap(const FragTrap &obj)
+{
+	Hitpoints = obj.Hitpoints;
+	Maxhitpoints = obj.Maxhitpoints;
+	Energypoints = obj.Energypoints;
+	Maxenergypoints = obj.Maxenergypoints;
+	Level = obj.Level;
+	Name = obj.Name;
+	Meleeattackdamage = obj.Meleeattackdamage;
+	Rangedattackdamage = obj.Rangedattackdamage;
+	Armordamagereduction = obj.Armordamagereduction;
+}
+
+void FragTrap::operator=(const FragTrap &obj)
+{
+	Hitpoints = obj.Hitpoints;
+	Maxhitpoints = obj.Maxhitpoints;
+	Energypoints = obj.Energypoints;
+	Maxenergypoints = obj.Maxenergypoints;
+	Level = obj.Level;
+	Name = obj.Name;
+	Meleeattackdamage = obj.Meleeattackdamage;
+	Rangedattackdamage = obj.Rangedattackdamage;
+	Armordamagereduction = obj.Armordamagereduction;	
+}
+
 FragTrap::~FragTrap()
 {
-	std::cout<<"Stay a while, and listen. Oh god, please -- PLEASE! -- stay a while."<<std::endl;
+	std::cout<<"Stay a while, and listen. Oh god, please -- PLEASE! -- stay a while.(destructor)"<<std::endl;
 }
 
 
@@ -43,22 +74,20 @@ void FragTrap::meleeAttack(std::string const & target)
 }
 void FragTrap::takeDamage(unsigned int amount)
 {
-	if((Hitpoints - (int)(amount)) + Armordamagereduction < 0)
+	if((Hitpoints - (int)amount) + Armordamagereduction < 0)
 		Hitpoints = 0;
+	else if ((Hitpoints - (int)amount) + Armordamagereduction > 100)
+		Hitpoints = 100;
 	else
-		Hitpoints = Hitpoints - amount + Armordamagereduction;
-	if((Energypoints + Armordamagereduction) < (int)(amount))
-		Energypoints = 0;
-	else
-		Energypoints = Energypoints - amount + Armordamagereduction;
-	std::cout<<"\033[1;31mYou are damaged :( !\033[0m HP:"<<Hitpoints<<" Energypoints :"<<Energypoints<<std::endl;
+		Hitpoints = Hitpoints - (int)amount + Armordamagereduction;
+	std::cout<<"\033[1;31mYou are damaged :( !!\033[0m, HP:"<<Hitpoints<<std::endl;
 }
 void FragTrap::beRepaired(unsigned int amount)
 {
 	if((int)(amount) + Hitpoints > Maxhitpoints)
 		Hitpoints = Maxhitpoints;
 	else
-		Hitpoints += amount;
+		Hitpoints += (int)amount;
 	if((int)(amount) + Energypoints > Maxenergypoints)
 		Energypoints = Maxenergypoints;
 	else
@@ -72,7 +101,6 @@ void FragTrap::vaulthunter_dot_exe(std::string const & target)
 	srand(time(0));
 	static int i;
 	i += rand();
-	// printf("i = [%d]\n", i);
 	if(Energypoints < 25)
 		std::cout<<"Out of energy !!"<<std::endl;
 	else

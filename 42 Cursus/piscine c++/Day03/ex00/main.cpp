@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/21 23:40:58 by mbani             #+#    #+#             */
-/*   Updated: 2020/08/22 16:17:01 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/06 15:31:42 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,18 @@
 
 int main()
 {
-	srand(time(0));
-	FragTrap tst("mouad");
-	FragTrap tst1("anass");
-	tst.rangedAttack("anass");
-	tst.meleeAttack("anass");
-	tst.takeDamage(rand()%100);
-	// tst.beRepaired(rand()%100);
-	tst1.vaulthunter_dot_exe("anass");
-	tst.vaulthunter_dot_exe("anass");
-	tst.vaulthunter_dot_exe("anass");
-	// tst.takeDamage(rand()%100);
-	tst.vaulthunter_dot_exe("anass");
-	tst.vaulthunter_dot_exe("anass");
-	tst1.vaulthunter_dot_exe("anass");
-	tst.beRepaired(rand()%100);
-	tst.vaulthunter_dot_exe("anass");
-
+	FragTrap player1("mbani");
+	player1.rangedAttack("1st target");
+	player1.meleeAttack("2nd target");
+	player1.takeDamage(70);
+	player1.beRepaired(5);
+	player1.vaulthunter_dot_exe("4th target");
+	player1.vaulthunter_dot_exe("5th target");
+	player1.vaulthunter_dot_exe("6th target");
+	player1.vaulthunter_dot_exe("7th target");
+	player1.vaulthunter_dot_exe("8th target");
+	player1.vaulthunter_dot_exe("8th target");
+	player1.takeDamage(70);
+	player1.beRepaired(0);
+	player1.vaulthunter_dot_exe("9th target");
 }

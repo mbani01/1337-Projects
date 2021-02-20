@@ -6,11 +6,16 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/25 15:40:58 by mbani             #+#    #+#             */
-/*   Updated: 2020/09/25 19:29:47 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/07 18:23:11 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ScavTrap.hpp"
+
+ScavTrap::ScavTrap()
+{
+	
+}
 
 ScavTrap::ScavTrap(std::string name)
 {
@@ -20,10 +25,36 @@ ScavTrap::ScavTrap(std::string name)
 	Energypoints = 50;
 	Maxenergypoints = 50;
 	Level = 1;
-	Name += name;
+	Name = name;
 	Meleeattackdamage = 20;
 	Rangedattackdamage = 15;
 	Armordamagereduction = 3;
+}
+
+ScavTrap::ScavTrap(const ScavTrap &obj)
+{
+	Hitpoints = obj.Hitpoints;
+	Maxhitpoints = obj.Maxhitpoints;
+	Energypoints = obj.Energypoints;
+	Maxenergypoints = obj.Maxenergypoints;
+	Level = obj.Level;
+	Name = obj.Name;
+	Meleeattackdamage = obj.Meleeattackdamage;
+	Rangedattackdamage = obj.Rangedattackdamage;
+	Armordamagereduction = obj.Armordamagereduction;	
+}
+
+void ScavTrap::operator=(const ScavTrap & obj)
+{
+	Hitpoints = obj.Hitpoints;
+	Maxhitpoints = obj.Maxhitpoints;
+	Energypoints = obj.Energypoints;
+	Maxenergypoints = obj.Maxenergypoints;
+	Level = obj.Level;
+	Name = obj.Name;
+	Meleeattackdamage = obj.Meleeattackdamage;
+	Rangedattackdamage = obj.Rangedattackdamage;
+	Armordamagereduction = obj.Armordamagereduction;	
 }
 
 ScavTrap::~ScavTrap()
@@ -40,22 +71,20 @@ void ScavTrap::meleeAttack(std::string const & target)
 }
 void ScavTrap::takeDamage(unsigned int amount)
 {
-	if((Hitpoints - amount) + Armordamagereduction < 0)
+	if((Hitpoints - (int)amount) + Armordamagereduction < 0)
 		Hitpoints = 0;
+	else if ((Hitpoints - (int)amount) + Armordamagereduction > 100)
+		Hitpoints = 100;
 	else
-		Hitpoints = Hitpoints - amount + Armordamagereduction;
-	if((Energypoints + Armordamagereduction) < (int)(amount))
-		Energypoints = 0;
-	else
-		Energypoints = Energypoints - amount + Armordamagereduction;
-	std::cout<<"\033[1;31mYou are damaged :( !\033[0m HP:"<<Hitpoints<<" Energypoints :"<<Energypoints<<std::endl;
+		Hitpoints = Hitpoints - (int)amount + Armordamagereduction;
+	std::cout<<"\033[1;31mYou are damaged :( !\033[0m HP:"<<Hitpoints<<std::endl;
 }
 void ScavTrap::beRepaired(unsigned int amount)
 {
 	if((int)(amount) + Hitpoints > Maxhitpoints)
 		Hitpoints = Maxhitpoints;
 	else
-		Hitpoints += amount;
+		Hitpoints += (int)amount;
 	if((int)(amount) + Energypoints > Maxenergypoints)
 		Energypoints = Maxenergypoints;
 	else

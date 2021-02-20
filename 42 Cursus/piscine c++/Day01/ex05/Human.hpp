@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/19 23:12:15 by mbani             #+#    #+#             */
-/*   Updated: 2021/01/09 18:45:07 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/10 15:05:45 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ class Human
 		const Brain br;
 	public:
 		Human();
+		~Human();
 		const Brain &getBrain();
 		std::string	identify();
 };

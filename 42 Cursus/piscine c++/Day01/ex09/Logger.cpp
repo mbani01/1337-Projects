@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/01 22:49:04 by mbani             #+#    #+#             */
-/*   Updated: 2020/05/02 00:16:12 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/11 18:44:21 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@ void	Logger::logToFile(std::string str)
 	this->filename = "logfile.log";
 	std::ofstream file;
 	file.open("logfile.log", std::ios_base::app);
-	file.exceptions(file.exceptions() | std::ios::failbit | std::ifstream::badbit);
-	file<<str<<std::endl;
+	if (file.is_open())
+		file<<str<<std::endl;
+	else
+		std::cout<<"Error !!!"<<std::endl;
+	file.close();
 }
 
 void	Logger::logToConsole(std::string str)
@@ -53,13 +56,10 @@ void	Logger::log(std::string const & dest, std::string const & message)
 			(this->*ptr[i]) (makeLogEntry(message));
 		}
 }
-int main()
+Logger::Logger()
 {
-	Logger l;
-	std::string msg = "hello world log";
-	std::string dst = "logToFile";
-	std::string msg1 = "woog 2";
-	std::string dst1 = "logToConsole";
-	l.log(dst, msg);
-	l.log(dst1, msg1);
+}
+
+Logger::~Logger()
+{
 }

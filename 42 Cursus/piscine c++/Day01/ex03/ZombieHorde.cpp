@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/03 18:16:09 by mbani             #+#    #+#             */
-/*   Updated: 2021/01/09 17:05:42 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/12 11:10:25 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 void ZombieHorde::annouce()
 {
 	int i = 0;
-	// std::cout<<this->Zmb[i].name<<std::endl;
 	while(this->Zmb[i].name[0])
 	{
 	this->Zmb[i].announce();

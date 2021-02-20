@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/21 23:16:00 by mbani             #+#    #+#             */
-/*   Updated: 2020/04/21 23:16:31 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/10 15:12:18 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	HumanB::setWeapon(Weapon &wp_ref)
 }
 void	HumanB::attack()
 {
-	std::cout<<this->name<<" attacks with his "<<wp->getType()<<std::endl;
+	std::cout<<this->name<<" attacks with his "<<this->wp->getType()<<std::endl;
 }
 HumanB::~HumanB()
 {

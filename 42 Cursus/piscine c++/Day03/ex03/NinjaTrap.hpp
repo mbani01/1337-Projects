@@ -6,11 +6,13 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/27 00:55:33 by mbani             #+#    #+#             */
-/*   Updated: 2020/09/27 01:11:07 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/08 12:12:49 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ClapTrap.hpp"
+#include "FragTrap.hpp"
+#include "ScavTrap.hpp"
 
 #ifndef _NINJATRAP_HPP
 #define _NINJATRAP_HPP
@@ -18,26 +20,18 @@ class NinjaTrap : public ClapTrap
 {
 
 public:
+	NinjaTrap();
 	NinjaTrap (std::string );
+	NinjaTrap(const NinjaTrap &);
+	void operator=(const NinjaTrap &);
+	void rangedAttack(std::string const &target);
+	void meleeAttack(std::string const & target);
+	void ninjaShoebox(const FragTrap &obj) const;
+	void ninjaShoebox(const ScavTrap &obj) const;
+	void ninjaShoebox(const NinjaTrap &obj) const;
 	~NinjaTrap ();
 };
 
-NinjaTrap ::NinjaTrap (std::string name)
-{
-	Hitpoints = 60;
-	Maxhitpoints = 60;
-	Energypoints = 120;
-	Maxenergypoints = 120;
-	Level = 1;
-	Name += name;
-	Meleeattackdamage = 60;
-	Rangedattackdamage = 5;
-	Armordamagereduction = 0;
-}
-
-NinjaTrap ::~NinjaTrap ()
-{
-}
 
 
 #endif

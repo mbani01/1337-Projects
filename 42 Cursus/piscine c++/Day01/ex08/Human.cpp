@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/27 23:05:29 by mbani             #+#    #+#             */
-/*   Updated: 2020/04/28 23:50:56 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/11 18:03:29 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void Human::meleeAttack(std::string const & target)
 
 void Human::rangedAttack(std::string const & target)
 {
-	std::cout<<"rabgeAttack called \nThe target is: "<<target<<std::endl;
+	std::cout<<"rangedAttack called \nThe target is: "<<target<<std::endl;
 }
 
 void Human::intimidatingShout(std::string const & target)

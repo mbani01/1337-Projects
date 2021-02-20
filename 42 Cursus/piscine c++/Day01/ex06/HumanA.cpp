@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/21 22:58:09 by mbani             #+#    #+#             */
-/*   Updated: 2020/04/21 22:58:47 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/10 15:12:46 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	HumanA::attack()
 {
-	std::cout<<this->name<<" attacks with his "<<wp->getType()<<std::endl;
+	std::cout<<this->name<<" attacks with his "<<this->wp->getType()<<std::endl;
 }
 HumanA::HumanA(std::string name1, Weapon &wp_ref)
 {

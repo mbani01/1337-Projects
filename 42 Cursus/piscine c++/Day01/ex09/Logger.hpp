@@ -6,10 +6,12 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/29 15:40:32 by mbani             #+#    #+#             */
-/*   Updated: 2020/05/02 15:44:26 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/11 18:38:33 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef __LOGGER_HPP
+#define __LOGGER_HPP
 #include <iostream>
 #include <fstream>
 #include <fstream>
@@ -27,10 +29,5 @@ public:
 	~Logger();
 };
 
-Logger::Logger()
-{
-}
 
-Logger::~Logger()
-{
-}
+#endif

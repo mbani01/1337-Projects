@@ -20,7 +20,7 @@ class Pony{
 	public:
 		void setpony(const char s[5]);
 		std::string getpony();
-		// Pony();
+		Pony();
 		~Pony();
 };
 void ponyOnTheHeap();

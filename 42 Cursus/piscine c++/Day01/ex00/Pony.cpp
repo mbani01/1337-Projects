@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/14 17:30:38 by mbani             #+#    #+#             */
-/*   Updated: 2021/01/03 15:33:49 by mbani            ###   ########.fr       */
+/*   Updated: 2021/01/12 11:04:13 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@ void Pony::setpony(const char s[5])
 std::string Pony::getpony()
 {
 	return pony;
+}
+Pony::Pony()
+{
+	
 }
 Pony::~Pony()
 {
