@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 11:46:27 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/20 11:17:45 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/20 11:36:40 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,28 +62,39 @@ Squad::Squad()
 
 Squad::Squad(const Squad &obj)
 {
-    units = new ISpaceMarine*[obj.size + 1];
-    for(int i = 0; i < obj.size; i++)
-        units[i] = obj.units[i];
-    units[size] = NULL;
+    *this = obj;
 }
 
 void Squad::operator=(const Squad &obj)
 {
-    for(int i = 0; i < size ; i++)
+    for(int i = 0 ; i < size; i++)
+    {
         delete units[i];
-    delete [] units;
-    units = NULL;
+        units[i] = NULL;    
+    }
+    if (units)
+    {
+        delete [] units;
+        units = NULL;
+    }
     units = new ISpaceMarine*[obj.size + 1];
     for(int i = 0; i < obj.size; i++)
-        units[i] = obj.units[i];
+    {
+        units[i] = obj.units[i]->clone();
+    }
     units[size] = NULL;
 }
 
 Squad::~Squad()
 {
     for(int i = 0 ; i < size; i++)
+    {
         delete units[i];
-    delete [] units;
-    units = NULL;
+        units[i] = NULL;    
+    }
+    if (units)
+    {
+        delete [] units;
+        units = NULL;
+    }
 }

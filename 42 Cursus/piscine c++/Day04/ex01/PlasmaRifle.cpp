@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/13 15:23:20 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/13 15:30:06 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/20 12:25:43 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void PlasmaRifle::operator=(const PlasmaRifle &obj)
 {
    name = obj.name;
    damage = obj.damage;
-   AP_cost = obj.AP_cost; 
+   AP_cost = obj.AP_cost;
 }
 
 PlasmaRifle::~PlasmaRifle()

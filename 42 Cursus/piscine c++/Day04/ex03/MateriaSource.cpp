@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/19 14:49:49 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/20 11:01:15 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/20 17:25:41 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ AMateria* MateriaSource::createMateria(std::string const &type)
     for(int i = 0; i < 4 ; i++)
     {
         if(inv[i]->getType() == type)
-            return inv[i];
+            return inv[i]->clone();
     }
     return 0;
 }

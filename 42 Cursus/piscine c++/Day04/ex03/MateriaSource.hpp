@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/18 17:37:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/20 10:56:12 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/23 09:58:35 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ public:
     void operator=(const MateriaSource&);
     void learnMateria(AMateria*);
     AMateria* createMateria(std::string const &type);
-    ~MateriaSource();
+    virtual ~MateriaSource();
 };
 
 

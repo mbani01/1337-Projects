@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/13 16:39:56 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/15 09:17:15 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/23 09:32:51 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ public:
     RadScorpion();
     RadScorpion(const RadScorpion &);
     void operator=(const RadScorpion &);
-    ~RadScorpion();
+    virtual ~RadScorpion();
 };
 
 #endif

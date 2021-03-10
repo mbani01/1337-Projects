@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 11:59:00 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/16 17:22:21 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/20 12:19:22 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@ ISpaceMarine* TacticalMarine::clone() const
     return (ISpaceMarine *)this;
 }
 
+TacticalMarine::TacticalMarine(const TacticalMarine &obj)
+{
+    *this = obj;
+}
+
+void TacticalMarine::operator=(const TacticalMarine &obj)
+{
+    (void) obj;
+}
 TacticalMarine::TacticalMarine()
 {
     std::cout << "Tactical Marine ready for battle!" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 15:13:54 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/20 11:10:48 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/23 10:03:17 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Squad : public ISquad
         int getCount() const;
         ISpaceMarine* getUnit(int) const;
         int push(ISpaceMarine*);
-        ~Squad();
+        virtual ~Squad();
 };
 
 

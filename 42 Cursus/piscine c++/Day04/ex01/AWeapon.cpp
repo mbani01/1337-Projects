@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/13 14:56:04 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/13 14:56:20 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/20 14:21:56 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ AWeapon::AWeapon()
 {
 }
 
-AWeapon::AWeapon(std::string const &name, int apcost, int damage):name(name), AP_cost(apcost), damage(damage)
+AWeapon::AWeapon(std::string const &name, int apcost, int damage):name(name), damage(damage),AP_cost(apcost)
 {
     
 }

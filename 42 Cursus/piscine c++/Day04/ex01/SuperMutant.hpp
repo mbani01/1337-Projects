@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/13 16:23:04 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/15 09:17:22 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/23 09:17:40 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ public:
     SuperMutant(const SuperMutant &);
     void operator=(const SuperMutant &);
     void takeDamage(int );
-    ~SuperMutant();
+    virtual ~SuperMutant();
 };
 
 

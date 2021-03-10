@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/15 09:03:37 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/15 11:25:46 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/23 09:31:43 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,21 @@ void Character::equip(AWeapon *wep)
 
 void Character::attack(Enemy *en)
 {
-    if (wp)
+    if (wp && AP > 0 && en && en->getHP() > 0)
     {
         AP -= wp->getAPCost();
         std::cout << name << " attacks " << en->getType() << " with a " << wp->getName() << std::endl;
         wp->attack();
         en->takeDamage(wp->getDamage());
         if (en->getHP() <= 0)
-                en->~Enemy();
+        {    
+            delete en;
+            en = NULL;
+        }
     }
 }
 
-std::string Character::getName() const
+std::string const Character::getName() const
 {
     return this->name;
 }

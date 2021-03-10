@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 16:09:32 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/12 17:14:43 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/23 09:04:18 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ public:
     Peon(const Peon &);
     void operator=(const Peon &);
     void getPolymorphed(void) const;
-    ~Peon();
+    virtual ~Peon();
 
 };
 
@@ -36,7 +36,7 @@ public:
     dog(const dog &);
     void operator=(const dog &);
     void getPolymorphed(void) const;
-    ~dog();
+    virtual ~dog();
 };
 
 

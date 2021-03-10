@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/17 10:08:07 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/20 08:46:56 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/23 09:58:51 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ public:
     void operator=(const Ice &);
     AMateria *clone() const;
     void use(ICharacter &target);
-    ~Ice();
+    virtual ~Ice();
 };
 
 

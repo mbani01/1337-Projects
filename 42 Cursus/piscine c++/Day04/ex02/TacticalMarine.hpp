@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 11:48:10 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/16 12:17:59 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/23 10:03:26 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 
 class TacticalMarine : public ISpaceMarine
 {
-private:
-    
-public:
-    TacticalMarine();
-    ISpaceMarine* clone() const;
-    void battleCry() const;
-    void rangedAttack() const;
-    void meleeAttack() const;
-    ~TacticalMarine();
+    public:
+        TacticalMarine();
+        TacticalMarine(const TacticalMarine &);
+        void operator=(const TacticalMarine &);
+        ISpaceMarine* clone() const;
+        void battleCry() const;
+        void rangedAttack() const;
+        void meleeAttack() const;
+        virtual ~TacticalMarine();
 };
 
 

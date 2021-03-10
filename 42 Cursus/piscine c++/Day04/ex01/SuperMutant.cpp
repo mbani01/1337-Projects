@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/13 16:39:24 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/13 16:39:32 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/23 09:34:57 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,11 @@ void SuperMutant::operator=(const SuperMutant &obj)
 void SuperMutant::takeDamage(int amount)
 {
     amount -= 3;
-    if (amount > 0)
+    if (hp - amount > 0)
     {
         hp -= amount;
+        if (hp < 0)
+            hp = 0;
     }
 }
 

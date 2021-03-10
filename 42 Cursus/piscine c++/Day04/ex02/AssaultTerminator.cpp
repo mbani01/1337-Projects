@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/16 15:43:03 by mbani             #+#    #+#             */
-/*   Updated: 2021/02/16 17:22:05 by mbani            ###   ########.fr       */
+/*   Updated: 2021/02/20 12:19:34 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@ ISpaceMarine* AssaultTerminator::clone() const
     return (ISpaceMarine *)(this);
 }
 
+AssaultTerminator::AssaultTerminator(const AssaultTerminator &obj)
+{
+    *this = obj;
+}
+
+void AssaultTerminator::operator=(const AssaultTerminator &obj)
+{
+    (void)obj;
+}
 
 void AssaultTerminator::battleCry() const
 {
